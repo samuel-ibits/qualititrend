@@ -3,7 +3,7 @@ import { auth } from "../services/auth";
 import { projects } from "@/services/projects";
 import { rtkQueryErrorLogger } from "./middlewares";
 import { staff } from "@/services/staff";
-import { category } from "@/services/categories";
+import { categories } from "@/services/categories";
 import { warehouse } from "@/services/warehouse";
 
 export const store = configureStore({
@@ -12,7 +12,7 @@ export const store = configureStore({
 		[projects.reducerPath]: projects.reducer,
 		[warehouse.reducerPath]: warehouse.reducer,
 		[staff.reducerPath]: staff.reducer,
-		[category.reducerPath]: category.reducer,
+		[categories.reducerPath]: categories.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(
@@ -20,7 +20,7 @@ export const store = configureStore({
 			projects.middleware,
 			warehouse.middleware,
 			staff.middleware,
-			category.middleware,
+			categories.middleware,
 			rtkQueryErrorLogger
 		),
 });

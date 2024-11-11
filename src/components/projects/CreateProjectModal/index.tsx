@@ -13,9 +13,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import BuildingUnitsTable from "./BuildingUnitsTable";
 import { AddBuildingUnitType } from "@/types/services/projects/buildings";
-import { useGetCategoryQuery } from "@/services/categories";
+import { useFetchCategoriesQuery } from "@/services/categories";
 import { _Select } from "@/components/global/MultipleSelectInput";
-import { CategoryTypes } from "@/types/services/categories";
+import { CategoryType } from "@/types/services/categories";
 import * as Yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 
@@ -44,20 +44,20 @@ const CreateProjectModal = ({
 		perPage: 100000,
 	});
 
-	const { data: building_purposes } = useGetCategoryQuery({
+	const { data: building_purposes } = useFetchCategoriesQuery({
 		type: "building_purpose"
 	})
 
-	const { data: concrete_types } = useGetCategoryQuery({
+	const { data: concrete_types } = useFetchCategoriesQuery({
 		type: "concrete_type"
 	})
 
-	const { data: furniture_types } = useGetCategoryQuery({
+	const { data: furniture_types } = useFetchCategoriesQuery({
 		type: "furniture_type"
 	})
 
 
-	const { data: project_statuses } = useGetCategoryQuery({
+	const { data: project_statuses } = useFetchCategoriesQuery({
 		type: "project_status"
 	})
 
