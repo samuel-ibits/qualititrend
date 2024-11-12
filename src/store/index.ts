@@ -4,6 +4,8 @@ import { projects } from "@/services/projects";
 import { rtkQueryErrorLogger } from "./middlewares";
 import { staff } from "@/services/staff";
 import { categories } from "@/services/categories";
+import { generalSettings } from "@/services/generalSettings";
+
 import { warehouse } from "@/services/warehouse";
 
 export const store = configureStore({
@@ -13,6 +15,8 @@ export const store = configureStore({
 		[warehouse.reducerPath]: warehouse.reducer,
 		[staff.reducerPath]: staff.reducer,
 		[categories.reducerPath]: categories.reducer,
+		[generalSettings.reducerPath]: generalSettings.reducer,
+
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(
@@ -21,6 +25,7 @@ export const store = configureStore({
 			warehouse.middleware,
 			staff.middleware,
 			categories.middleware,
+			generalSettings.middleware,
 			rtkQueryErrorLogger
 		),
 });
