@@ -4,14 +4,20 @@ import {
   useFetchCategoriesQuery,
   useFetchCategoryTypesQuery,
   useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+	useDeleteCategoryMutation,
 } from '@/services/categories';
-import { FetchCategoriesRequest, FetchCategoriesResponse, Category } from '@/types/services/categories';
+import { FetchCategoriesRequest, FetchCategoriesResponse, Category,UpdateCategoryRequest } from '@/types/services/categories';
 
 const CategoryComponent: React.FC = () => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [selectedCategoryData, setSelectedCategoryData] = useState<Category | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>('project_type');
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState({ name: '', description: '', type: 'expense_request' });
+  const [isEdit, setIsEdit] = useState(false);
+  
+  const [newCategory, setNewCategory] = useState({ name: '', description: '', type: selectedCategoryId });
+
   const [status, setStatus] = useState<"success" | "error" | null>(null);
 
   const [pagination, setPagination] = useState({
@@ -22,13 +28,10 @@ const CategoryComponent: React.FC = () => {
 
   // Fetch categories with pagination
   const { data } = useFetchCategoriesQuery({
-    type: 'expense_request',
+    type: selectedCategoryId,
     limit: pagination.perPage,
     offset: (pagination.page - 1) * pagination.perPage,
   } as FetchCategoriesRequest);
-
-  // Fetch category types for the dropdown
-  const { data: categoryTypesData, isLoading: isTypesLoading } = useFetchCategoryTypesQuery();
 
   useEffect(() => {
     if (data?.success) {
@@ -39,24 +42,47 @@ const CategoryComponent: React.FC = () => {
     }
   }, [data]);
 
-  // Fetch specific category data when selected
-  useEffect(() => {
-    if (selectedCategoryId) {
-      const fetchCategoryDetails = async () => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_APP_BASE_URL}/get-category-by-type?id=${selectedCategoryId}`
-          );
-          const categoryData: FetchCategoriesResponse = await response.json();
-          const categoryDetail = categoryData.data.categories.find((cat) => cat.id === parseInt(selectedCategoryId, 10));
-          setSelectedCategoryData(categoryDetail || null);
-        } catch (error) {
-          console.error("Failed to fetch category details:", error);
-        }
-      };
-      fetchCategoryDetails();
+  const [updateCategory, { isLoading: isUpdating }] = useUpdateCategoryMutation();
+
+// Example handlers for Edit and Delete
+const handleEdit = (categoryId) => {
+
+  setIsModalOpen(true);
+  setNewCategory(categoryId);
+  setIsEdit(true);
+
+  // Implement edit functionality here
+  console.log("Editing category:", categoryId);
+};
+
+
+const [deleteCategory] = useDeleteCategoryMutation();
+
+const handleDelete = async (category) => {
+  // Implement delete functionality here
+  try {
+    const response = await deleteCategory(category).unwrap();
+    if (response.success) {
+      console.log("Deleting category:", category);
+      setStatus('success');
+    } else {
+      setStatus('error');
     }
-  }, [selectedCategoryId]);
+  } catch (error) {
+    console.error('Failed to create category:', error);
+    setStatus('error');
+  }
+
+};
+
+  // Fetch category types for the dropdown
+  const { data: categoryTypesData, isLoading: isTypesLoading } = useFetchCategoryTypesQuery();
+  
+  // Fetch specific category data when selected using the service
+  const { data: selectedCategoryData, isLoading: isCategoryLoading, error: categoryError } =
+  useFetchCategoriesQuery({ type: selectedCategoryId || '' });
+
+  console.log('test',categoryTypesData?.data);
 
   const handleCategorySelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategoryId(event.target.value || null);
@@ -72,14 +98,29 @@ const CategoryComponent: React.FC = () => {
   // Mutation hook for creating a category
   const [createCategory, { isLoading }] = useCreateCategoryMutation();
 
+
   const handleSave = async () => {
     try {
+      if(isEdit){
+        const { id, type, name, description } = newCategory; 
+        console.log("newCategory ",newCategory )
+        const response = await updateCategory({id, type, name, description}).unwrap();
+        console.log('edit failed');
+        if (response?.success) {
+          setStatus('success');
+        } else {
+          setStatus('error');
+        }
+        setIsEdit(false);
+
+      }else{
       const response = await createCategory(newCategory).unwrap();
       if (response.success) {
         setStatus('success');
       } else {
         setStatus('error');
       }
+    }
     } catch (error) {
       console.error('Failed to create category:', error);
       setStatus('error');
@@ -98,12 +139,12 @@ const CategoryComponent: React.FC = () => {
           value={selectedCategoryId || ''}
         >
           <option value="">Select a Category</option>
-          {/* {!isTypesLoading &&
-            categoryTypesData?.data?.map((categoryType: { name: string }) => (
-              <option key={categoryType.name} value={categoryType.name}>
+          {!isTypesLoading &&
+            categoryTypesData?.data?.map((categoryType: { name: string , id: string }) => (
+              <option key={categoryType.id} value={categoryType.id}>
                 {categoryType.name}
               </option>
-            ))} */}
+            ))}
         </select>
         <button
           className="flex items-center bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition"
@@ -117,7 +158,7 @@ const CategoryComponent: React.FC = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative">
-            <h2 className="text-lg font-semibold mb-4">Create New Category</h2>
+            <h2 className="text-lg font-semibold mb-4">Create New {selectedCategoryId} Category  </h2>
             <button
               className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
               onClick={handleCloseModal}
@@ -169,12 +210,12 @@ const CategoryComponent: React.FC = () => {
             {status === 'success' ? (
               <>
                 <FaCheckCircle className="text-green-500 mx-auto mb-4" size={50} />
-                <p className="text-lg font-medium">Inventory Category created successfully</p>
+                <p className="text-lg font-medium"> Success</p>
               </>
             ) : (
               <>
                 <FaTimesCircle className="text-red-500 mx-auto mb-4" size={50} />
-                <p className="text-lg font-medium">Failed to create Inventory Category</p>
+                <p className="text-lg font-medium">Failed </p>
               </>
             )}
           </div>
@@ -192,26 +233,45 @@ const CategoryComponent: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {!isLoading && selectedCategoryData ? (
-              <tr className="border-b">
-                <td className="px-6 py-4 whitespace-nowrap text-gray-800">{selectedCategoryData.name}</td>
-                <td className="px-6 py-4 text-gray-600">{selectedCategoryData.description}</td>
+            
+        {!isLoading && selectedCategoryData ? (
+          selectedCategoryData.data.length > 0 ? (
+            selectedCategoryData.data.map((category) => (
+              <tr key={category.id} className="border-b">
+                <td className="px-6 py-4 whitespace-nowrap text-gray-800">{category.name}</td>
+                <td className="px-6 py-4 text-gray-600">{category.description}</td>
                 <td className="px-4 py-2 text-center space-x-2">
-                  <button className="text-gray-600 hover:text-orange-500" aria-label="Edit">
+                  <button
+                    className="text-gray-600 hover:text-orange-500"
+                    aria-label="Edit"
+                    onClick={() =>{ handleEdit(category); }}
+                  >
                     <FaEdit />
                   </button>
-                  <button className="text-gray-600 hover:text-red-500" aria-label="Delete">
+                  <button
+                    className="text-gray-600 hover:text-red-500"
+                    aria-label="Delete"
+                    onClick={() => handleDelete(category)}
+                  >
                     <FaTrash />
                   </button>
                 </td>
               </tr>
-            ) : (
-              <tr>
-                <td colSpan={3} className="text-center text-gray-500 py-4">
-                  {isLoading ? 'Loading...' : 'Select a category to view details'}
-                </td>
-              </tr>
-            )}
+            ))
+          ) : (
+            <tr>
+              <td colSpan={3} className="text-center text-gray-500 py-4">
+                No categories available. <button className="text-blue-500 hover:underline">Create New Category</button>
+              </td>
+            </tr>
+          )
+        ) : (
+          <tr>
+            <td colSpan={3} className="text-center text-gray-500 py-4">
+              {isLoading ? 'Loading...' : 'Select a category to view details'}
+            </td>
+          </tr>
+        )}
           </tbody>
         </table>
       </div>

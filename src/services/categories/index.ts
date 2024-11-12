@@ -38,7 +38,7 @@ const postRequest = (url: string, details?: unknown) => ({
 
 const patchRequest = (url: string, details?: unknown) => ({
 	url,
-	method: "PATCH",
+	method: "POST",
 	body: details,
 });
 
@@ -83,7 +83,7 @@ export const categories = createApi({
 
 		// Update Category Mutation
 		updateCategory: builder.mutation<void, UpdateCategoryRequest>({
-			query: ({ id, ...data }) => patchRequest(`/update-category/${id}`, data),
+			query: ({ id, ...data }) => postRequest(`/update-category/${id}`, data),
 			invalidatesTags: ["Categories", "CategoryDetails"],
 		}),
 

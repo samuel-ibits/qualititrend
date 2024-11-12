@@ -52,7 +52,7 @@ export interface FetchCategoryTypesResponse {
 
 // CategoryType Interface
 export interface CategoryType {
-	// id: string;
+	id: string;
 	name: string; // e.g., "unit_measurement"
 }
 
@@ -61,7 +61,7 @@ export interface UpdateCategoryRequest {
 	id: string;
 	name?: string;
 	description?: string;
-	type_id?: string;
+	type?: string;
 }
 
 export interface DeleteCategoryRequest {
