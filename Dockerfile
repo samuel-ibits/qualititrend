@@ -1,8 +1,8 @@
 # Use the official Node.js image as the base image
-FROM node:14
+FROM node:22
 
 # Create and change to the app directory
-WORKDIR /usr/src/app
+WORKDIR /src/app
 
 # Copy the package.json and package-lock.json
 COPY package*.json ./
@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 8800
 
 # Command to run the app
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
