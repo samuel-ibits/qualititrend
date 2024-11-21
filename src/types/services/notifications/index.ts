@@ -15,6 +15,25 @@ export interface FetchNotificationsResponse {
     updated_by: string; // User ID of the updater
     created_at: string; // ISO timestamp
     updated_at: string; // ISO timestamp
+    data: Notifications;
+    [key: string]: any; // Allow for additional properties
+}
+
+export interface Notifications {
+    id: number;
+    sms: string; // "0" or "1" indicating off/on state
+    email: string; // "0" or "1" indicating off/on state
+    whatsapp: string; // "0" or "1" indicating off/on state
+    request_recieved: string; // "0" or "1"
+    request_approved: string; // "0" or "1"
+    warehouse_low: string; // "0" or "1"
+    material_delivered: string; // "0" or "1"
+    lease_due: string; // "0" or "1"
+    payment_due: string; // "0" or "1"
+    updated_by: string; // User ID of the updater
+    created_at: string; // ISO timestamp
+    updated_at: string; // ISO timestamp
+    data: {};
     [key: string]: any; // Allow for additional properties
 }
 

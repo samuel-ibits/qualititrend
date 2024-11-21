@@ -7,51 +7,50 @@ import { toast } from "react-toastify";
 const NotificationSettings = () => {
   const { data, error, isLoading } = useFetchNotificationsQuery();
   const [updateNotification] = useUpdateNotificationMutation();
-console.log("data",data);
   const [preferences, setPreferences] = useState<{
-    email: boolean | null;
-    sms: boolean | null;
-    whatsapp: boolean | null;
+    email: "";
+    sms: "";
+    whatsapp: "";
   }>({
-    email: null,
-    sms: null,
-    whatsapp: null,
+    email: data?.data?.email,
+    sms: data?.data?.sms,
+    whatsapp: data?.data?.whatsapp,
   });
   
   const [notificationSettings, setNotificationSettings] = useState<{
-    general: boolean | null;
-    requestAdmin: boolean | null;
-    requestUser: boolean | null;
-    warehouseStock: boolean | null;
-    materialDelivery: boolean | null;
-    leaseReminder: boolean | null;
-    paymentReminder: boolean | null;
+    general: "";
+    requestAdmin: "";
+    requestUser: "";
+    warehouseStock: "";
+    materialDelivery:"";
+    leaseReminder: "";
+    paymentReminder:"";
   }>({
-    general: null,
-    requestAdmin: null,
-    requestUser: null,
-    warehouseStock: null,
-    materialDelivery: null,
-    leaseReminder: null,
-    paymentReminder: null,
+    general: "",
+    requestAdmin: "",
+    requestUser: "",
+    warehouseStock: "",
+    materialDelivery: "",
+    leaseReminder: "",
+    paymentReminder: "",
   });
   
 
   useEffect(() => {
     if (data) {
       setPreferences({
-        email: data[0]?.email === "1",
-        sms: data[0]?.sms === "1",
-        whatsapp: data[0]?.whatsapp === "1",
+        email: data.data.email ,
+        sms: data?.data?.sms ,
+        whatsapp: data?.data?.whatsapp ,
       });
       setNotificationSettings({
-        general: data[0]?.request_recieved === "1",
-        requestAdmin: data[0]?.request_approved === "1",
-        requestUser: data[0]?.request_recieved === "1",
-        warehouseStock: data[0]?.warehouse_low === "1",
-        materialDelivery: data[0]?.material_delivered === "1",
-        leaseReminder: data[0]?.lease_due === "1",
-        paymentReminder: data[0]?.payment_due === "1",
+        general:  data?.data?.request_recieved === 1 ? "1" : "",
+        requestAdmin:   data?.data?.request_approved === 1 ? "1" : "",
+        requestUser:  data?.data?.request_recieved === 1 ? "1" : "",
+        warehouseStock:  data?.data?.warehouse_low === 1 ? "1" : "",
+        materialDelivery:  data?.data?.material_delivered === 1 ? "1" : "" ,
+        leaseReminder:  data?.data?.lease_due === 1 ? "1" : "",
+        paymentReminder:  data?.data?.payment_due === 1 ? "1" : "",
       });
     }
   }, [data]);
@@ -81,7 +80,7 @@ console.log("data",data);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading notification settings.</p>;
 
-
+console.log( data?.data)
   return (
     <div className="p-6">
       {/* Notification Settings Header */}
@@ -183,7 +182,7 @@ console.log("data",data);
   <input
     type="checkbox"
     checked={notificationSettings.warehouseStock}
-    onChange={() => toggleNotification("warehouseStock")}
+    onChange={() => toggleNotification("warehouse_low")}
     className="sr-only peer"
   />
   <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
@@ -230,7 +229,7 @@ console.log("data",data);
   <input
     type="checkbox"
     checked={notificationSettings.leaseReminder}
-    onChange={() => toggleNotification("leaseReminder")}
+    onChange={() => toggleNotification("lease_due")}
     className="sr-only peer"
   />
   <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
@@ -247,11 +246,13 @@ console.log("data",data);
               className="toggle-checkbox appearance-none checked:bg-orange-500 h-6 w-6 rounded-full border-gray-300 cursor-pointer"
             />
           </label> */}
+                    {notificationSettings.paymentReminder}testtttt
+
           <label className="relative inline-flex items-center cursor-pointer">
   <input
     type="checkbox"
     checked={notificationSettings.paymentReminder}
-    onChange={() => toggleNotification("paymentReminder")}
+    onChange={() => toggleNotification("payment_due")}
     className="sr-only peer"
   />
   <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
