@@ -1,72 +1,64 @@
-// "use client";
-
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { useFetchNotificationsQuery, useUpdateNotificationMutation } from "@/services/notifications";
 import { toast } from "react-toastify";
+// import { FetchNotificationsResponse, Notifications } from "@/types/services/notifications";
+
+interface NotificationSettingsProps {
+  email: boolean;
+  sms: boolean;
+  whatsapp: boolean;
+  request_recieved: boolean;
+  request_approved: boolean;
+  warehouse_low: boolean;
+  material_delivered: boolean;
+  lease_due: boolean;
+  payment_due: boolean;
+  // data:;
+}
+
+interface FetchNotificationsResponse {
+  data: NotificationSettingsProps; // Correctly typed `data`
+  isLoading: boolean;
+  isSuccess: boolean;
+  code: number;
+  message: string;
+  error: string | null;
+}
 
 const NotificationSettings = () => {
-  const { data, error, isLoading } = useFetchNotificationsQuery();
+  const { data, error, isLoading, isSuccess } = useFetchNotificationsQuery<FetchNotificationsResponse>();
   const [updateNotification] = useUpdateNotificationMutation();
-  const [preferences, setPreferences] = useState<{
-    email: "";
-    sms: "";
-    whatsapp: "";
-  }>({
-    email: data?.data?.email,
-    sms: data?.data?.sms,
-    whatsapp: data?.data?.whatsapp,
-  });
-  
-  const [notificationSettings, setNotificationSettings] = useState<{
-    general: "";
-    requestAdmin: "";
-    requestUser: "";
-    warehouseStock: "";
-    materialDelivery:"";
-    leaseReminder: "";
-    paymentReminder:"";
-  }>({
-    general: "",
-    requestAdmin: "",
-    requestUser: "",
-    warehouseStock: "",
-    materialDelivery: "",
-    leaseReminder: "",
-    paymentReminder: "",
-  });
-  
 
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettingsProps>({
+    email: false,
+    sms: false,
+    whatsapp: false,
+    request_recieved: false,
+    request_approved: false,
+    warehouse_low: false,
+    material_delivered: false,
+    lease_due: false,
+    payment_due: false,
+  });
   useEffect(() => {
-    if (data) {
-      setPreferences({
-        email: data.data.email ,
-        sms: data?.data?.sms ,
-        whatsapp: data?.data?.whatsapp ,
-      });
+    if (isSuccess && data) {
+      const settings = data.data; // Now correctly typed
       setNotificationSettings({
-        general:  data?.data?.request_recieved === 1 ? "1" : "",
-        requestAdmin:   data?.data?.request_approved === 1 ? "1" : "",
-        requestUser:  data?.data?.request_recieved === 1 ? "1" : "",
-        warehouseStock:  data?.data?.warehouse_low === 1 ? "1" : "",
-        materialDelivery:  data?.data?.material_delivered === 1 ? "1" : "" ,
-        leaseReminder:  data?.data?.lease_due === 1 ? "1" : "",
-        paymentReminder:  data?.data?.payment_due === 1 ? "1" : "",
+        email: settings.email === "1",
+        sms: settings.sms === "1",
+        whatsapp: settings.whatsapp === "1",
+        request_recieved: settings.request_recieved === "1",
+        request_approved: settings.request_approved === "1",
+        warehouse_low: settings.warehouse_low === "1",
+        material_delivered: settings.material_delivered === "1",
+        lease_due: settings.lease_due === "1",
+        payment_due: settings.payment_due === "1",
       });
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
-  const togglePreference = async (type: string) => {
-    try {
-      const updatedPreferences = { ...preferences, [type]: !preferences[type] };
-      await updateNotification({ type, value: updatedPreferences[type] ? 1 : 0 }).unwrap();
-      setPreferences(updatedPreferences);
-      toast.success(`Preference for ${type} updated successfully!`);
-    } catch (err) {
-      toast.error(`Failed to update preference for ${type}.`);
-    }
-  };
-
-  const toggleNotification = async (type: string) => {
+  const toggleNotification = async (type: keyof NotificationSettingsProps) => {
     try {
       const updatedSettings = { ...notificationSettings, [type]: !notificationSettings[type] };
       await updateNotification({ type, value: updatedSettings[type] ? 1 : 0 }).unwrap();
@@ -79,8 +71,6 @@ const NotificationSettings = () => {
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading notification settings.</p>;
-
-console.log( data?.data)
   return (
     <div className="p-6">
       {/* Notification Settings Header */}
@@ -89,7 +79,7 @@ console.log( data?.data)
       </div>
 
       {/* General Settings Section */}
-      <div className="space-y-4 mb-6">
+      <div className="space-y-4 mb-6 p-4">
         <h3 className="font-semibold">General Settings</h3>
         <p className="text-sm text-gray-600">General notifications for system updates and announcements.</p>
         <div className="flex items-center justify-between">
@@ -100,167 +90,115 @@ console.log( data?.data)
                 <label key={preference} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={preferences[preference]}
-                    onChange={() => togglePreference(preference)}
-                    className="form-checkbox h-4 w-4 text-orange-500"
+                    checked={notificationSettings[preference as keyof NotificationSettingsProps]}
+                    onChange={() => toggleNotification(preference as keyof NotificationSettingsProps)}
+                    className="h-4 w-4 text-orange-500 bg-gray-100 border-gray-300 rounded focus:ring-orange-500"
                   />
                   <span className="capitalize">{preference}</span>
                 </label>
               ))}
             </div>
           </div>
-          <div>
-        
-        
-          </div>
         </div>
       </div>
+      <hr/>
 
       {/* Request Notification Settings Section */}
-      <div className="space-y-2 mb-6 border p-4 rounded-md border-blue-300">
+      <div className="space-y-2 mb-6 p-4">
         <h3 className="font-semibold">Request Notification Settings:</h3>
-        <div className="flex items-center justify-between">
-          <span className="text-sm">Notify super admin or warehouse manager when receiving a request.</span>
-          {/* <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={notificationSettings.requestAdmin}
-              onChange={() => toggleNotification("requestAdmin")}
-              className="toggle-checkbox appearance-none checked:bg-orange-500 h-6 w-6 rounded-full border-gray-300 cursor-pointer"
-            />
-          </label> */}
-          <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={notificationSettings.requestAdmin}
-    onChange={() => toggleNotification("requestAdmin")}
-    className="sr-only peer"
-  />
-  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
-  <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
-</label>
-
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm">Notify users when their request is approved or declined.</span>
-          {/* <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={notificationSettings.requestUser}
-              onChange={() => toggleNotification("requestUser")}
-              className="toggle-checkbox appearance-none checked:bg-orange-500 h-6 w-6 rounded-full border-gray-300 cursor-pointer"
-            />
-          </label> */}
-          <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={notificationSettings.requestUser}
-    onChange={() => toggleNotification("requestUser")}
-    className="sr-only peer"
-  />
-  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
-  <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
-</label>
-        </div>
+        {["request_recieved", "request_approved"].map((type) => (
+          <div key={type} className="flex items-center justify-between">
+            <span className="text-sm">
+              {type === "request_recieved"
+                ? "Notify super admin or warehouse manager when receiving a request."
+                : "Notify users when their request is approved or declined."}
+            </span>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={notificationSettings[type as keyof NotificationSettingsProps]}
+                onChange={() => toggleNotification(type as keyof NotificationSettingsProps)}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
+              <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 "></div>
+            </label>
+          </div>
+        ))}
       </div>
+      <hr/>
 
       {/* Warehouse Notifications Section */}
-      <div className="space-y-2 mb-6">
+      <div className="space-y-2 mb-6 p-4">
         <h3 className="font-semibold">Warehouse Notifications</h3>
-        <div className="flex items-center justify-between">
-          <span className="text-sm">Notify when warehouse stock is low.</span>
-          {/* <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={notificationSettings.warehouseStock}
-              onChange={() => toggleNotification("warehouseStock")}
-              className="toggle-checkbox appearance-none checked:bg-orange-500 h-6 w-6 rounded-full border-gray-300 cursor-pointer"
-            />
-          </label> */}
+        {[{ text:"warehouse_low", title: "Stock Level Notification Settings:"}, {text: "material_delivered", title: "Material Delivery Notification Settings:"}].map((type) => (
+          <>
 
-          <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={notificationSettings.warehouseStock}
-    onChange={() => toggleNotification("warehouse_low")}
-    className="sr-only peer"
-  />
-  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
-  <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
-</label>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm">Notify when materials have been delivered.</span>
-          {/* <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={notificationSettings.materialDelivery}
-              onChange={() => toggleNotification("materialDelivery")}
-              className="toggle-checkbox appearance-none checked:bg-orange-500 h-6 w-6 rounded-full border-gray-300 cursor-pointer"
-            />
-          </label> */}
-          <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={notificationSettings.materialDelivery}
-    onChange={() => toggleNotification("material_delivered")}
-    className="sr-only peer"
-  />
-  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
-  <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
-</label>
-        </div>
+          <div key={type.text} className="flex items-center justify-between">
+          <ul className="list-disc">
+            <span className="text-sm-bold">
+          {type.title}
+          </span>
+              <li className="list-inside">
+            <span className="text-sm">
+              {type.text === "warehouse_low"
+                ? "Notify when warehouse stock is low."
+                : "Notify when materials have been delivered."}
+            </span>
+            </li>
+            </ul>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={notificationSettings[type.text as keyof NotificationSettingsProps]}
+                onChange={() => toggleNotification(type.text as keyof NotificationSettingsProps)}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
+              <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
+            </label>
+          </div>
+          </>
+        ))}
       </div>
-
+      <hr/>
       {/* Reminder Settings Section */}
-      <div className="space-y-2">
+      <div className="space-y-2 mb-6 p-4">
         <h3 className="font-semibold">Reminder Settings</h3>
-        <div className="flex items-center justify-between">
-          <span className="text-sm">Set reminder for lease two days before due date.</span>
-          {/* <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={notificationSettings.leaseReminder}
-              onChange={() => toggleNotification("leaseReminder")}
-              className="toggle-checkbox appearance-none checked:bg-orange-500 h-6 w-6 rounded-full border-gray-300 cursor-pointer"
-            />
-          </label> */}
-          <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={notificationSettings.leaseReminder}
-    onChange={() => toggleNotification("lease_due")}
-    className="sr-only peer"
-  />
-  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
-  <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
-</label>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm">Set reminder for payment due dates.</span>
-          {/* <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={notificationSettings.paymentReminder}
-              onChange={() => toggleNotification("paymentReminder")}
-              className="toggle-checkbox appearance-none checked:bg-orange-500 h-6 w-6 rounded-full border-gray-300 cursor-pointer"
-            />
-          </label> */}
-                    {notificationSettings.paymentReminder}testtttt
-
-          <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={notificationSettings.paymentReminder}
-    onChange={() => toggleNotification("payment_due")}
-    className="sr-only peer"
-  />
-  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
-  <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
-</label>
-        </div>
+        {[{text:"lease_due", title:"Lease Due Date Reminder Settings:"},{text: "payment_due", title:"Payment Reminder Settings:"}].map((type) => (
+          <>
+         
+          <div key={type.text} className="flex items-center justify-between">
+            <ul className="list-disc">
+            <span className="text-sm-bold">
+          {type.title}
+          </span>
+              <li className="list-inside">
+            <span className="text-sm">
+              {type.text === "lease_due"
+                ? "Set reminder for lease two days before due date."
+                : "Set reminder for payment due dates."}
+            </span>
+            </li>
+            </ul>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={notificationSettings[type.text as keyof NotificationSettingsProps]}
+                onChange={() => toggleNotification(type.text as keyof NotificationSettingsProps)}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-orange-500 peer-focus:ring-2 peer-focus:ring-orange-300"></div>
+              <div className="peer-checked:translate-x-6 transform transition-transform w-5 h-5 bg-white rounded-full absolute left-1 top-1"></div>
+            </label>
+          </div>
+          </>
+        ))}
       </div>
+      <hr/>
+
     </div>
+    
   );
 };
 

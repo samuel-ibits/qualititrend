@@ -11,7 +11,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/global/Button";
 import { AddBuildingUnitType } from "@/types/services/projects/buildings";
-import { useGetCategoryQuery } from "@/services/categories";
+import { useFetchCategoriesQuery } from "@/services/categories";
 import { _Select } from "@/components/global/MultipleSelectInput";
 
 
@@ -33,11 +33,11 @@ type TableProps = {
 
 export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
 
-	const { data: other_room_options } = useGetCategoryQuery({
+	const { data: other_room_options } = useFetchCategoriesQuery({
 		type: "other_rooms"
 	})
 
-	const { data: building_unit_type_options } = useGetCategoryQuery({
+	const { data: building_unit_type_options } = useFetchCategoriesQuery({
 		type: "building_unit_type"
 	})
 

@@ -7,7 +7,7 @@ import { _Select } from "@/components/global/MultipleSelectInput";
 import SelectInput from "@/components/global/SelectInput";
 import Icons from "@/components/icons";
 import { cn, numberWithCommas } from "@/lib/utils";
-import { useGetCategoryQuery } from "@/services/categories";
+import { useFetchCategoriesQuery } from "@/services/categories";
 import { useCreateExpenseRequestMutation } from "@/services/warehouse";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -36,7 +36,7 @@ const CreateRequestModal = ({
 		},
 	});
 
-	const { data: expense_categories } = useGetCategoryQuery({
+	const { data: expense_categories } = useFetchCategoriesQuery({
 		type: "expense_request"
 	})
 

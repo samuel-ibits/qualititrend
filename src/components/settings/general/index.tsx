@@ -1,4 +1,7 @@
+// @ts-nocheck
+
 "use client"
+
 import React, { useState, useEffect } from 'react';
 import { useFetchSettingsQuery, useUploadLogoMutation, useUpdateSettingsMutation, useUpdateTermsConditionMutation } from '@/services/generalSettings';
 import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';

@@ -2,7 +2,8 @@
 export type CreateCategoryRequest = {
 	name: string;
 	description?: string;
-	type_id: string; // The ID of the category type (e.g., "unit_measurement" or similar)
+	type_id: string;
+	id: string
 };
 
 export type CreateCategoryResponse = {

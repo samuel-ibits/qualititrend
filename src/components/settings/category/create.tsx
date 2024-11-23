@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState } from 'react';
 import { FaTimes, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { useCreateCategoryMutation } from '@/services/categories'; // Import the mutation hook

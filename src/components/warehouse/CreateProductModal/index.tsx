@@ -7,7 +7,7 @@ import { _Select } from "@/components/global/MultipleSelectInput";
 import Icons from "@/components/icons";
 import { WAREHOUSE_ITEM_STATUSES, WAREHOUSE_ITEM_TYPES } from "@/lib/constants";
 import { formatAmount } from "@/lib/utils";
-import { useGetCategoryQuery } from "@/services/categories";
+import { useFetchCategoriesQuery } from "@/services/categories";
 import { useCreateWarehouseItemMutation } from "@/services/warehouse";
 import { useEffect, useState } from "react";
 
@@ -49,7 +49,7 @@ const CreateProductModal = ({
     const { formState: { errors, isValid }, reset, watch, } = methods;
 
 
-    const { data: units_of_measurement } = useGetCategoryQuery({ type:"unit_measurement" })
+    const { data: units_of_measurement } = useFetchCategoriesQuery({ type:"unit_measurement" })
 
     const watchStockQuantity = watch("stockQuantity");
     const watchValuePerUnit = watch("valuePerUnit");

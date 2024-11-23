@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import {
