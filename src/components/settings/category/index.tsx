@@ -278,13 +278,13 @@ const handleDelete = async (category) => {
         </table>
       </div>
 
-      {/* Pagination Info */}
+      {/* Pagination Info
       <div className="mt-4">
         <p>Pagination Info:</p>
         <p>Page: {pagination.page}</p>
         <p>Items per page: {pagination.perPage}</p>
         <p>Total items: {pagination.total}</p>
-      </div>
+      </div> */}
     </div>
   );
 };

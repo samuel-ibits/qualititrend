@@ -51,7 +51,7 @@ const WarehouseSettings: React.FC = () => {
 
     return (
         <div className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Warehouse Settings</h2>
+            {/* <h2 className="text-2xl font-semibold mb-4">Warehouse Settings</h2> */}
             {isLoading || isFetching ? (
                 <p>Loading warehouses...</p>
             ) : error ? (

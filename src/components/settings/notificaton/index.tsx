@@ -43,7 +43,7 @@ const NotificationSettings = () => {
   });
   useEffect(() => {
     if (isSuccess && data) {
-      const settings = data.data; // Now correctly typed
+      const settings = data.data; 
       setNotificationSettings({
         email: settings.email === "1",
         sms: settings.sms === "1",
@@ -83,18 +83,18 @@ const NotificationSettings = () => {
         <h3 className="font-semibold">General Settings</h3>
         <p className="text-sm text-gray-600">General notifications for system updates and announcements.</p>
         <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-semibold">Preference</h4>
-            <div className="mt-2 space-y-2">
+            <div>
+              <h4 className="font-semibold">Preference</h4>
+              <div className="mt-2 space-y-2">
               {["email", "sms", "whatsapp"].map((preference) => (
                 <label key={preference} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     checked={notificationSettings[preference as keyof NotificationSettingsProps]}
                     onChange={() => toggleNotification(preference as keyof NotificationSettingsProps)}
-                    className="h-4 w-4 text-orange-500 bg-gray-100 border-gray-300 rounded focus:ring-orange-500"
+                    className="h-4 w-4 accent-orange-500 text-white-100 bg-orange-500  border border-slate-300 checked:bg-slate-800 checked:border-slate-800"
                   />
-                  <span className="capitalize">{preference}</span>
+                  <span className="capitalize text-grey-500">{preference}</span>
                 </label>
               ))}
             </div>
