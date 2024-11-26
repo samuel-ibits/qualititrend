@@ -134,169 +134,156 @@ const GeneralSettings = () => {
 
   return (
     <>
-      {/* Success/Error Status Modal */}
-      {status && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center relative">
-            <button
-              className="absolute top-3 right-3 text-orange-500 hover:text-orange-700"
-              onClick={handleCloseStatusModal}
-            >
-              <FaTimes />
-            </button>
-            {status === 'success' ? (
-              <>
-                <FaCheckCircle className="text-green-500 mx-auto mb-4" size={50} />
-                <p className="text-lg font-medium"> Success</p>
-              </>
+    {/* Success/Error Status Modal */}
+    {status && (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm text-center relative">
+          <button
+            className="absolute top-3 right-3 text-orange-500 hover:text-orange-700"
+            onClick={handleCloseStatusModal}
+          >
+            <FaTimes />
+          </button>
+          {status === "success" ? (
+            <>
+              <FaCheckCircle className="text-green-500 mx-auto mb-4" size={50} />
+              <p className="text-lg font-medium">Success</p>
+            </>
+          ) : (
+            <>
+              <FaTimesCircle className="text-red-500 mx-auto mb-4" size={50} />
+              <p className="text-lg font-medium">Failed</p>
+            </>
+          )}
+        </div>
+      </div>
+    )}
+  
+    <div className="space-y-6 mt-4 max-w-6xl mx-auto px-4 md:px-0">
+      {/* Company Details Section */}
+      <div className="p-6 rounded-md border border-gray-300 shadow-sm">
+        <h2 className="font-semibold text-lg mb-4 bg-orange-100 p-4 rounded-md">
+          Company Details
+        </h2>
+  
+        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-x-4">
+          {/* Logo Section */}
+          <div className="flex items-center md:w-1/5">
+            <span className="block text-gray-700 font-medium">Logo</span>
+          </div>
+  
+          <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 overflow-hidden">
+            {logoPreview ? (
+              <img
+                src={logoPreview}
+                alt="Logo preview"
+                className="w-full h-full object-cover"
+              />
             ) : (
-              <>
-                <FaTimesCircle className="text-red-500 mx-auto mb-4" size={50} />
-                <p className="text-lg font-medium">Failed </p>
-              </>
+              <img
+                src={organizationLogo}
+                alt="Logo preview"
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
+  
+          <div className="flex flex-col items-center space-y-2">
+            <input
+              type="file"
+              className="hidden"
+              id="logo-upload"
+              onChange={handleFileChange}
+              accept="image/*"
+            />
+            <label
+              htmlFor="logo-upload"
+              className="text-blue-500 hover:underline cursor-pointer flex items-center"
+            >
+              <FaUpload className="mr-1" /> {isLoading ? "Uploading..." : "Upload"}
+            </label>
+            <p className="text-gray-500 text-sm">{fileName}</p>
+            {logoPreview && (
+              <button
+                className="text-red-500 hover:underline"
+                onClick={handleRemove}
+              >
+                Remove
+              </button>
             )}
           </div>
         </div>
-      )}
-   
-   
-      <div className="space-y-6 mt-4 max-w-6xl mx-auto">
-        
-        {/* Company Details Section */}
-        <div className="p-6 rounded-md border border-gray-300 shadow-sm">
-          <h2 className="font-semibold text-lg mb-4 bg-orange-100 p-4 rounded-md">
-            Company Details
-          </h2>
   
-    <div className="flex items-center space-x-4">
-      {/* Label Section */}
-      <div className="w-1/5">
-        <span className="block text-gray-700 font-medium">Logo</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          {/* Form Inputs */}
+          {[
+            { label: "Organization Name", value: organizationName, setValue: setOrganizationName },
+            { label: "Email Address", value: email, setValue: setEmail },
+            { label: "Phone Number", value: phoneNumber, setValue: setPhoneNumber },
+            { label: "Address", value: address, setValue: setAddress },
+            { label: "RC Number", value: rcNumber, setValue: setRcNumber },
+            { label: "Tax ID", value: taxId, setValue: setTaxId },
+            { label: "Bank Name", value: bankName, setValue: setBankName },
+            { label: "Account Number", value: accountNumber, setValue: setAccountNumber },
+            { label: "Account Name", value: accountName, setValue: setAccountName },
+          ].map((input, index) => (
+            <div className="flex flex-col space-y-2" key={index}>
+              <label className="block text-sm font-medium text-gray-700">
+                {input.label}
+              </label>
+              <input
+                type="text"
+                className="p-2 w-full border border-gray-300 rounded-md"
+                value={input.value}
+                onChange={(e) => input.setValue(e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+  
+        {/* Add New Account */}
+        <div className="flex justify-start mt-4">
+          <button className="text-orange-500 hover:underline flex items-center">
+            <FaPlus className="mr-1" /> Add New Account
+          </button>
+        </div>
       </div>
-
-      {/* Logo Preview Section */}
-      <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 overflow-hidden">
-        {logoPreview ? (
-          <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
-        ) : (
-          <img src={organizationLogo} alt="Logo preview" className="w-full h-full object-cover" />
-          
-        )}
-      </div>
-
-      {/* File Upload Section */}
-      <div className="flex flex-col">
-        <input
-          type="file"
-          className="hidden"
-          id="logo-upload"
-          onChange={handleFileChange}
-          accept="image/*"
-        />
-        <label
-          htmlFor="logo-upload"
-          className="text-blue-500 hover:underline cursor-pointer flex items-center"
+  
+      {/* Save Changes Button */}
+      <div className="flex justify-center">
+        <button
+          onClick={handleSaveChanges}
+          className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 w-full sm:w-auto"
         >
-          <FaUpload className="mr-1" /> {isLoading ? "Uploading..." : "Upload"}
-        </label>
-        <p className="text-gray-500 text-sm mt-1">{fileName}</p>
+          Save Changes
+        </button>
       </div>
-
-      {/* Remove Button */}
-      {logoPreview && (
-        <div>
-          <button
-            className="text-red-500 hover:underline"
-            onClick={handleRemove}
-          >
-            Remove
-          </button>
-        </div>
-      )}
+  
+      {/* Terms & Conditions Section */}
+      <div className="p-6 rounded-md border border-gray-300 shadow-sm">
+        <h2 className="font-semibold text-lg mb-4 bg-orange-100 p-4 rounded-md">
+          Terms & Conditions
+        </h2>
+        <textarea
+          className="w-full sm:w-2/3 border border-gray-300 rounded-md p-2"
+          value={termsCondition}
+          onChange={(e) => setTermsCondition(e.target.value)}
+          rows="5"
+        />
+      </div>
+  
+      {/* Save Changes Button for Terms & Conditions */}
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={handleSaveTerms}
+          className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 w-full sm:w-auto"
+        >
+          Save Changes
+        </button>
+      </div>
     </div>
+  </>
   
-  <div className='grid grid-rows-6 grid-flow-col grid-cols-1 md:grid-cols-2 gap-4 '>
-    
-            {/* Inputs */}
-            {[
-              {
-                label: "Organization Name",
-                value: organizationName,
-                setValue: setOrganizationName,
-              },
-              { label: "Email Address", value: email, setValue: setEmail },
-              {
-                label: "Phone Number",
-                value: phoneNumber,
-                setValue: setPhoneNumber,
-              },
-              { label: "Address", value: address, setValue: setAddress },
-              { label: "Rc Number", value: rcNumber, setValue: setRcNumber },
-              { label: "Tax ID", value: taxId, setValue: setTaxId },
-              { label: "Bank Name", value: bankName, setValue: setBankName },
-              {
-                label: "Account Number",
-                value: accountNumber,
-                setValue: setAccountNumber,
-              },
-              { label: "Account Name", value: accountName, setValue: setAccountName },
-            ].map((input, index) => (
-              <div className="flex items-center space-x-4" key={index}>
-              {/* Label */}
-              <div className="w-1/5">
-                <label className="block text-sm font-medium text-gray-700">
-                  {input.label}
-                </label>
-              </div>
-            
-              {/* Input */}
-              <div className="flex-grow md:mr-5">
-                <input
-                  type="text"
-                  className="mt-1 p-2 w-full  border border-gray-300 rounded-md"
-                  value={input.value}
-                  onChange={(e) => input.setValue(e.target.value)}
-                />
-              </div>
-            </div>
-            
-            ))}
-  
-  
-            {/* Add New Account */}
-            <div className="flex items-center mt-4 md:mt-0">
-              <button className="text-orange-500 hover:underline flex items-center">
-                <FaPlus className="mr-1" /> Add New Account
-              </button>
-            </div>
-            </div>
-
-          </div>
-        </div>
-  
-        {/* Save Changes Button */}
-        <div className="flex justify-center">
-          <button onClick={handleSaveChanges}  className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600">
-            Save Changes
-          </button>
-        </div>
-      
-
-  {/* Terms & Conditions Section */}
-  <div className="p-4 rounded-md">
-    <h2 className="font-semibold text-lg mb-2 bg-orange-100 p-4">Terms & Conditions</h2>
-    <textarea
-      className="w-2/3 border border-gray-300 rounded-md p-2  ml-20"
-      value={termsCondition}
-      onChange={(e) => setTermsCondition(e.target.value)}
-    />
-  </div>
-
-  {/* Save Changes Button for Terms & Conditions */}
-  <div className="flex justify-center mt-4">
-    <button onClick={handleSaveTerms} className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600">Save Changes</button>
-  </div>
-</>
   );
 };
 
