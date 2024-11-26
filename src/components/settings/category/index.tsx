@@ -133,109 +133,116 @@ const handleDelete = async (category) => {
   const handleCloseStatusModal = () => setStatus(null);
 
   return (
-    <div className="p-4">
-      <div className="flex items-center space-x-4 mb-4">
-        <select
-          className="border border-gray-300 rounded-md p-2"
-          onChange={handleCategorySelect}
-          value={selectedCategoryId || ''}
-        >
-          <option value="">Select a Category</option>
-          {!isTypesLoading &&
-            categoryTypesData?.data?.map((categoryType: { name: string , id: string }) => (
-              <option key={categoryType.id} value={categoryType.id}>
-                {categoryType.name}
-              </option>
-            ))}
-        </select>
+<div className="p-4">
+  <div className="flex flex-col space-y-4 mb-4 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
+    <select
+      className="border border-gray-300 rounded-md p-2 w-full sm:w-auto"
+      onChange={handleCategorySelect}
+      value={selectedCategoryId || ''}
+    >
+      <option value="">Select a Category</option>
+      {!isTypesLoading &&
+        categoryTypesData?.data?.map((categoryType: { name: string; id: string }) => (
+          <option key={categoryType.id} value={categoryType.id}>
+            {categoryType.name}
+          </option>
+        ))}
+    </select>
+    <button
+      className="flex items-center justify-center bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition w-full sm:w-auto"
+      onClick={handleOpenModal}
+    >
+      <FaPlus className="mr-2" /> Create Category
+    </button>
+  </div>
+
+  {/* Create Category Modal */}
+  {isModalOpen && (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full sm:max-w-md">
+        <h2 className="text-lg font-semibold mb-4">
+          Create New {selectedCategoryId} Category
+        </h2>
         <button
-          className="flex items-center bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition"
-          onClick={handleOpenModal}
+          className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+          onClick={handleCloseModal}
         >
-          <FaPlus className="mr-2" /> Create Category
+          <FaTimes />
+        </button>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Category Name</label>
+          <input
+            type="text"
+            name="name"
+            value={newCategory.name}
+            onChange={handleNewCategoryChange}
+            placeholder="Enter category name"
+            className="mt-1 p-2 border border-gray-300 rounded w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <input
+            type="text"
+            name="description"
+            value={newCategory.description}
+            onChange={handleNewCategoryChange}
+            placeholder="Enter description"
+            className="mt-1 p-2 border border-gray-300 rounded w-full"
+          />
+        </div>
+        <button
+          onClick={handleSave}
+          className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition duration-300"
+        >
+          Save
         </button>
       </div>
+    </div>
+  )}
 
-      {/* Create Category Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative">
-            <h2 className="text-lg font-semibold mb-4">Create New {selectedCategoryId} Category  </h2>
-            <button
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
-              onClick={handleCloseModal}
-            >
-              <FaTimes />
-            </button>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Category Name</label>
-              <input
-                type="text"
-                name="name"
-                value={newCategory.name}
-                onChange={handleNewCategoryChange}
-                placeholder="Enter category name"
-                className="mt-1 p-2 border border-gray-300 rounded w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Description</label>
-              <input
-                type="text"
-                name="description"
-                value={newCategory.description}
-                onChange={handleNewCategoryChange}
-                placeholder="Enter description"
-                className="mt-1 p-2 border border-gray-300 rounded w-full"
-              />
-            </div>
-            <button
-              onClick={handleSave}
-              className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition duration-300"
-            >
-              Save
-            </button>
-          </div>
-        </div>
-      )}
+  {/* Success/Error Status Modal */}
+  {status && (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center relative">
+        <button
+          className="absolute top-3 right-3 text-orange-500 hover:text-orange-700"
+          onClick={handleCloseStatusModal}
+        >
+          <FaTimes />
+        </button>
+        {status === 'success' ? (
+          <>
+            <FaCheckCircle className="text-green-500 mx-auto mb-4" size={50} />
+            <p className="text-lg font-medium">Success</p>
+          </>
+        ) : (
+          <>
+            <FaTimesCircle className="text-red-500 mx-auto mb-4" size={50} />
+            <p className="text-lg font-medium">Failed</p>
+          </>
+        )}
+      </div>
+    </div>
+  )}
 
-      {/* Success/Error Status Modal */}
-      {status && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center relative">
-            <button
-              className="absolute top-3 right-3 text-orange-500 hover:text-orange-700"
-              onClick={handleCloseStatusModal}
-            >
-              <FaTimes />
-            </button>
-            {status === 'success' ? (
-              <>
-                <FaCheckCircle className="text-green-500 mx-auto mb-4" size={50} />
-                <p className="text-lg font-medium"> Success</p>
-              </>
-            ) : (
-              <>
-                <FaTimesCircle className="text-red-500 mx-auto mb-4" size={50} />
-                <p className="text-lg font-medium">Failed </p>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Category Table */}
-      <div className="mt-4 overflow-x-auto">
-        <table className="min-w-full bg-white border rounded-lg shadow-md">
-          <thead>
-            <tr className="bg-orange-100">
-              <th className="text-left px-6 py-3 border-b font-semibold text-gray-700">Category Name</th>
-              <th className="text-left px-6 py-3 border-b font-semibold text-gray-700">Description</th>
-              <th className="text-center px-6 py-3 border-b font-semibold text-gray-700">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            
+  {/* Category Table */}
+  <div className="mt-4 overflow-x-auto">
+    <table className="min-w-full bg-white border rounded-lg shadow-md">
+      <thead>
+        <tr className="bg-orange-100">
+          <th className="text-left px-6 py-3 border-b font-semibold text-gray-700">
+            Category Name
+          </th>
+          <th className="text-left px-6 py-3 border-b font-semibold text-gray-700">
+            Description
+          </th>
+          <th className="text-center px-6 py-3 border-b font-semibold text-gray-700">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
         {!isLoading && selectedCategoryData ? (
           selectedCategoryData.data.length > 0 ? (
             selectedCategoryData.data.map((category) => (
@@ -246,7 +253,9 @@ const handleDelete = async (category) => {
                   <button
                     className="text-gray-600 hover:text-orange-500"
                     aria-label="Edit"
-                    onClick={() =>{ handleEdit(category); }}
+                    onClick={() => {
+                      handleEdit(category);
+                    }}
                   >
                     <FaEdit />
                   </button>
@@ -263,7 +272,10 @@ const handleDelete = async (category) => {
           ) : (
             <tr>
               <td colSpan={3} className="text-center text-gray-500 py-4">
-                No categories available. <button className="text-blue-500 hover:underline">Create New Category</button>
+                No categories available.{' '}
+                <button className="text-blue-500 hover:underline">
+                  Create New Category
+                </button>
               </td>
             </tr>
           )
@@ -274,18 +286,10 @@ const handleDelete = async (category) => {
             </td>
           </tr>
         )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination Info
-      <div className="mt-4">
-        <p>Pagination Info:</p>
-        <p>Page: {pagination.page}</p>
-        <p>Items per page: {pagination.perPage}</p>
-        <p>Total items: {pagination.total}</p>
-      </div> */}
-    </div>
+      </tbody>
+    </table>
+  </div>
+</div>
   );
 };
 
