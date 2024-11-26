@@ -4,8 +4,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useFetchSettingsQuery, useUploadLogoMutation, useUpdateSettingsMutation, useUpdateTermsConditionMutation } from '@/services/generalSettings';
-import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import { UpdateSettingsRequest } from '@/types/services/generalSettings';
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheckCircle, FaTimesCircle,FaUpload, } from 'react-icons/fa';
+import { UpdateSettingsRequest, } from '@/types/services/generalSettings';
 
 const GeneralSettings = () => {
   // Fetch initial settings
@@ -52,9 +52,42 @@ const GeneralSettings = () => {
     const file = event.target.files?.[0];
     if (file) {
       const formData = new FormData();
-      formData.append("logo", file);
+      formData.append("image", file);
       await uploadLogo(formData);
     }
+  };
+
+  const [logoPreview, setLogoPreview] = useState(null); // Local preview of the uploaded logo
+  const [fileName, setFileName] = useState("No chosen file"); // Display name of the uploaded file
+  // const [uploadLogo, { isLoading }] = useUploadLogoMutation(); // Hook from RTK Query
+
+  // Handle file upload
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Generate a preview for local display
+      setLogoPreview(URL.createObjectURL(file));
+      setFileName(file.name);
+
+      // Create FormData and append the file
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        // Call the mutation to upload the logo
+        await uploadLogo(formData).unwrap();
+        alert("Logo uploaded successfully!");
+      } catch (error) {
+        console.error("Failed to upload logo:", error);
+        alert("Error uploading logo. Please try again.");
+      }
+    }
+  };
+
+  // Handle file removal
+  const handleRemove = () => {
+    setLogoPreview(null); // Remove preview
+    setFileName("No chosen file"); // Reset file name
   };
 
   const handleSaveChanges = async () => {
@@ -100,9 +133,9 @@ const GeneralSettings = () => {
   if (isError) return <div>Error loading settings.</div>;
 
   return (
-    <div className="space-y-6 mt-4">
-       {/* Success/Error Status Modal */}
-       {status && (
+    <>
+      {/* Success/Error Status Modal */}
+      {status && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center relative">
             <button
@@ -125,86 +158,145 @@ const GeneralSettings = () => {
           </div>
         </div>
       )}
+   
+   
+      <div className="space-y-6 mt-4 max-w-6xl mx-auto">
+        
+        {/* Company Details Section */}
+        <div className="p-6 rounded-md border border-gray-300 shadow-sm">
+          <h2 className="font-semibold text-lg mb-4 bg-orange-100 p-4 rounded-md">
+            Company Details
+          </h2>
+  
+    <div className="flex items-center space-x-4">
+      {/* Label Section */}
+      <div className="w-1/5">
+        <span className="block text-gray-700 font-medium">Logo</span>
+      </div>
 
-      {/* Company Details Section */}
-      <div className="p-4 rounded-md">
-        <h2 className="font-semibold text-lg mb-2 bg-orange-100 p-4 ">Company Details</h2>
-        <div className="grid grid-rows-7 grid-flow-col grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center">
-            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-500">
-              <span>Logo</span>
-            </div>
-            <div className="ml-4">
-              <input type="file" onChange={handleUploadLogo} className="hidden" id="logo-upload" />
-              <label htmlFor="logo-upload" className="text-blue-500 hover:underline cursor-pointer">Upload</label>
-              <button className="text-red-500 hover:underline ml-2">Remove</button>
-              <p className="text-gray-500 text-sm">No chosen file</p>
-            </div>
-          </div>
+      {/* Logo Preview Section */}
+      <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 overflow-hidden">
+        {logoPreview ? (
+          <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+        ) : (
+          <img src={organizationLogo} alt="Logo preview" className="w-full h-full object-cover" />
+          
+        )}
+      </div>
 
-          {/* Inputs for Organization Details */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Organization Name</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={organizationName} onChange={(e) => setOrganizationName(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email Address</label>
-            <input type="email" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Address</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={address} onChange={(e) => setAddress(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Rc Number</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={rcNumber} onChange={(e) => setRcNumber(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Tax ID</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={taxId} onChange={(e) => setTaxId(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Bank Name</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={bankName} onChange={(e) => setBankName(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Account Number</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Account Name</label>
-            <input type="text" className="mt-1 p-2 w-full border border-gray-300 rounded-md" value={accountName} onChange={(e) => setAccountName(e.target.value)} />
-          </div>
-          <div className="flex items-center">
-            <button className="text-orange-500 hover:underline">+ Add New Account</button>
+      {/* File Upload Section */}
+      <div className="flex flex-col">
+        <input
+          type="file"
+          className="hidden"
+          id="logo-upload"
+          onChange={handleFileChange}
+          accept="image/*"
+        />
+        <label
+          htmlFor="logo-upload"
+          className="text-blue-500 hover:underline cursor-pointer flex items-center"
+        >
+          <FaUpload className="mr-1" /> {isLoading ? "Uploading..." : "Upload"}
+        </label>
+        <p className="text-gray-500 text-sm mt-1">{fileName}</p>
+      </div>
+
+      {/* Remove Button */}
+      {logoPreview && (
+        <div>
+          <button
+            className="text-red-500 hover:underline"
+            onClick={handleRemove}
+          >
+            Remove
+          </button>
+        </div>
+      )}
+    </div>
+  
+  <div className='grid grid-rows-6 grid-flow-col grid-cols-1 md:grid-cols-2 gap-4 '>
+    
+            {/* Inputs */}
+            {[
+              {
+                label: "Organization Name",
+                value: organizationName,
+                setValue: setOrganizationName,
+              },
+              { label: "Email Address", value: email, setValue: setEmail },
+              {
+                label: "Phone Number",
+                value: phoneNumber,
+                setValue: setPhoneNumber,
+              },
+              { label: "Address", value: address, setValue: setAddress },
+              { label: "Rc Number", value: rcNumber, setValue: setRcNumber },
+              { label: "Tax ID", value: taxId, setValue: setTaxId },
+              { label: "Bank Name", value: bankName, setValue: setBankName },
+              {
+                label: "Account Number",
+                value: accountNumber,
+                setValue: setAccountNumber,
+              },
+              { label: "Account Name", value: accountName, setValue: setAccountName },
+            ].map((input, index) => (
+              <div className="flex items-center space-x-4" key={index}>
+              {/* Label */}
+              <div className="w-1/5">
+                <label className="block text-sm font-medium text-gray-700">
+                  {input.label}
+                </label>
+              </div>
+            
+              {/* Input */}
+              <div className="flex-grow md:mr-5">
+                <input
+                  type="text"
+                  className="mt-1 p-2 w-full  border border-gray-300 rounded-md"
+                  value={input.value}
+                  onChange={(e) => input.setValue(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            ))}
+  
+  
+            {/* Add New Account */}
+            <div className="flex items-center mt-4 md:mt-0">
+              <button className="text-orange-500 hover:underline flex items-center">
+                <FaPlus className="mr-1" /> Add New Account
+              </button>
+            </div>
+            </div>
+
           </div>
         </div>
-      </div>
+  
+        {/* Save Changes Button */}
+        <div className="flex justify-center">
+          <button onClick={handleSaveChanges}  className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600">
+            Save Changes
+          </button>
+        </div>
+      
 
-      {/* Save Changes Button */}
-      <div className="flex justify-center">
-        <button onClick={handleSaveChanges} className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600">Save Changes</button>
-      </div>
+  {/* Terms & Conditions Section */}
+  <div className="p-4 rounded-md">
+    <h2 className="font-semibold text-lg mb-2 bg-orange-100 p-4">Terms & Conditions</h2>
+    <textarea
+      className="w-2/3 border border-gray-300 rounded-md p-2  ml-20"
+      value={termsCondition}
+      onChange={(e) => setTermsCondition(e.target.value)}
+    />
+  </div>
 
-      {/* Terms & Conditions Section */}
-      <div className="p-4 rounded-md">
-        <h2 className="font-semibold text-lg mb-2 bg-orange-100 p-4 ">Terms & Conditions</h2>
-        <textarea
-          className="w-full border border-gray-300 rounded-md p-2"
-          value={termsCondition}
-          onChange={(e) => setTermsCondition(e.target.value)}
-        />
-      </div>
-
-      {/* Save Changes Button for Terms & Conditions */}
-      <div className="flex justify-center mt-4">
-        <button onClick={handleSaveTerms} className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600">Save Changes</button>
-      </div>
-    </div>
+  {/* Save Changes Button for Terms & Conditions */}
+  <div className="flex justify-center mt-4">
+    <button onClick={handleSaveTerms} className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600">Save Changes</button>
+  </div>
+</>
   );
 };
 
