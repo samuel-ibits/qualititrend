@@ -7,6 +7,7 @@ import NotificationSettings from './notificaton';
 import WarehouseSettings from './warehouse';
 import PeopleSettings from './people';
 import ProjectSettings from './project';
+import ProjectStatusSettings from './projectStatus';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('General Settings');
@@ -33,6 +34,12 @@ const Settings = () => {
     if (activeTab === 'Warehouse') {
       return (
         <WarehouseSettings/>
+      );
+    }
+
+    if (activeTab === 'Project Status') {
+      return (
+        <ProjectStatusSettings/>
       );
     }
 
@@ -71,7 +78,7 @@ const Settings = () => {
   
       {/* Navigation Tabs */}
       <nav className="flex flex-wrap md:flex-nowrap space-x-2 md:space-x-16 text-gray-700 mt-4 border-b w-full">
-        {['General Settings', 'People', 'Warehouse', 'Category', 'Notifications'].map((tab) => (
+        {['General Settings', 'People', 'Warehouse', 'Project Status','Category', 'Notifications'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}

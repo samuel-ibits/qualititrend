@@ -7,7 +7,7 @@ import { categories } from "@/services/categories";
 import { generalSettings } from "@/services/generalSettings";
 
 import { warehouse } from "@/services/warehouse";
-// import { warehouseSetting } from "@/services/warehouse/setting";
+import { projectStatus } from "@/services/projectStatus";
 import { warehouses } from "@/services/warehouse/setting";
 import { notificationsApi } from "@/services/notifications"; // Adjust the path as needed
 
@@ -18,7 +18,7 @@ export const store = configureStore({
 		[auth.reducerPath]: auth.reducer,
 		[projects.reducerPath]: projects.reducer,
 		[warehouse.reducerPath]: warehouse.reducer,
-		// [warehouseSetting.reducerPath]: warehouseSetting.reducer,
+		[projectStatus.reducerPath]: projectStatus.reducer,
 		[staff.reducerPath]: staff.reducer,
 		[categories.reducerPath]: categories.reducer,
 		[generalSettings.reducerPath]: generalSettings.reducer,
@@ -32,6 +32,7 @@ export const store = configureStore({
 			auth.middleware,
 			projects.middleware,
 			warehouse.middleware,
+			projectStatus.middleware,
 			staff.middleware,
 			categories.middleware,
 			generalSettings.middleware,
