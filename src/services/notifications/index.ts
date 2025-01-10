@@ -46,7 +46,10 @@ export const notificationsApi = createApi({
     }),
 
     // Fetch Notification Types Query
-    fetchNotificationTypes: builder.query<FetchNotificationTypesResponse[], void>({
+    fetchNotificationTypes: builder.query<
+      FetchNotificationTypesResponse[],
+      void
+    >({
       query: () => getRequest("/fetch-notification-types"),
       providesTags: ["Notifications"],
     }),

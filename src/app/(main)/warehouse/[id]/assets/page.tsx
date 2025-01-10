@@ -4,12 +4,9 @@ import WarehouseAssetsDetails from "@/components/warehouse/WarehouseAssetsDetail
 import { useParams } from "next/navigation";
 
 const WarehouseAssetsDetailsPage = () => {
+  const params = useParams();
 
-    const params = useParams();
-
-    return (
-        <WarehouseAssetsDetails />
-    );
+  return <WarehouseAssetsDetails />;
 };
 
 export default WarehouseAssetsDetailsPage;

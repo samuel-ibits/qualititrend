@@ -40,7 +40,6 @@ const Offer = () => {
       projectCode: 638292,
       action: "",
     },
-
   ];
 
   const tableHeadData = [
@@ -65,11 +64,7 @@ const Offer = () => {
         loaderLength={10}
         tableHeadData={tableHeadData}
         rowComponent={(transaction, index, length) => {
-          const {
-            customer,
-            projectCode,
-            action,
-          } = transaction;
+          const { customer, projectCode, action } = transaction;
           return (
             <tr
               onClick={() => {}}

@@ -1,14 +1,12 @@
-import WarehouseLease from '@/components/warehouse/Lease';
-import { Metadata } from 'next';
+import WarehouseLease from "@/components/warehouse/Lease";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Warehouse | Lease",
 };
 
 const WarehouseLeasePage = () => {
-  return (
-    <WarehouseLease />
-  )
-}
+  return <WarehouseLease />;
+};
 
-export default WarehouseLeasePage
+export default WarehouseLeasePage;

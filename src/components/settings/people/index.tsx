@@ -1,37 +1,37 @@
-import React from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import React from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const PeopleSettings = () => {
   const roles = [
     {
-      role: 'No Permission',
-      description: 'No Permission',
-      level: 'No Permission',
+      role: "No Permission",
+      description: "No Permission",
+      level: "No Permission",
     },
     {
-      role: 'Super Admin',
-      description: 'Super Admin Permission',
-      level: 'Level 9',
+      role: "Super Admin",
+      description: "Super Admin Permission",
+      level: "Level 9",
     },
     {
-      role: 'Admin',
-      description: 'Admin Permission',
-      level: 'Level 8',
+      role: "Admin",
+      description: "Admin Permission",
+      level: "Level 8",
     },
     {
-      role: 'Sales',
-      description: 'Sales Permission',
-      level: 'Level 7',
+      role: "Sales",
+      description: "Sales Permission",
+      level: "Level 7",
     },
     {
-      role: 'Project Manager',
-      description: 'Project Manager Permission',
-      level: 'Level 6',
+      role: "Project Manager",
+      description: "Project Manager Permission",
+      level: "Level 6",
     },
     {
-      role: 'Project Supervisor',
-      description: 'Project Supervisor Permission',
-      level: 'Level 5',
+      role: "Project Supervisor",
+      description: "Project Supervisor Permission",
+      level: "Level 5",
     },
   ];
 
@@ -42,10 +42,18 @@ const PeopleSettings = () => {
         <table className="min-w-full border border-gray-200 rounded-md">
           <thead className="bg-orange-100">
             <tr>
-              <th className="px-4 py-2 text-left font-semibold text-gray-700">Role</th>
-              <th className="px-4 py-2 text-left font-semibold text-gray-700">Role Description</th>
-              <th className="px-4 py-2 text-left font-semibold text-gray-700">Level</th>
-              <th className="px-4 py-2 text-center font-semibold text-gray-700">Actions</th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                Role
+              </th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                Role Description
+              </th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                Level
+              </th>
+              <th className="px-4 py-2 text-center font-semibold text-gray-700">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>

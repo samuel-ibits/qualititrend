@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "People | Staff",
+  title: "People | Staff",
 };
 
 const StaffPage = () => {
-	return <div>StaffPage</div>;
+  return <div>StaffPage</div>;
 };
 
 export default StaffPage;

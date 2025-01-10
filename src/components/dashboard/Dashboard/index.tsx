@@ -12,62 +12,62 @@ import Stats from "@/components/global/Stats";
 import { useSession } from "next-auth/react";
 
 const Dashboard = () => {
-	const session = useSession();
-	console.log(session)
-	
-	const stats = [
-		{
-			title: "Total Income",
-			value: formatAmount(0, "NGN"),
-			icon: <Icons.IncomeIcon />,
-		},
-		{
-			title: "Total Expenses",
-			value: formatAmount(0, "NGN"),
-			icon: <Icons.ExpensesIcon />,
-		},
-		{
-			title: "Projects",
-			value: 0,
-			icon: <Icons.ProjectStatsIcon />,
-		},
-		{
-			title: "Customers",
-			value: 0,
-			icon: <Icons.CustomersIcon />,
-		},
-	];
+  const session = useSession();
+  console.log(session);
 
-	const sideStats = [
-		{
-			title: "Pending Expenses",
-			value: formatAmount(0, "NGN"),
-		},
-		{
-			title: "Unpaid Receivables",
-			value: formatAmount(0, "NGN"),
-		},
-	];
+  const stats = [
+    {
+      title: "Total Income",
+      value: formatAmount(0, "NGN"),
+      icon: <Icons.IncomeIcon />,
+    },
+    {
+      title: "Total Expenses",
+      value: formatAmount(0, "NGN"),
+      icon: <Icons.ExpensesIcon />,
+    },
+    {
+      title: "Projects",
+      value: 0,
+      icon: <Icons.ProjectStatsIcon />,
+    },
+    {
+      title: "Customers",
+      value: 0,
+      icon: <Icons.CustomersIcon />,
+    },
+  ];
 
-	return (
-		<section className='lg:grid lg:grid-cols-3 lg:gap-8 max-lg:space-y-4'>
-			<div className='col-span-2 space-y-6'>
-				<Stats stats={stats} />
-			</div>
-			<div className='col-span-1 space-y-6'>
-				<SideStats stats={sideStats} />
-			</div>
-			<div className='col-span-2 space-y-6'>
-				<IncomeAndExpensesChart />
-				<RecentTransactions />
-			</div>
-			<div className='col-span-1 space-y-6'>
-				<Projects />
-				<CreateCard />
-				<PendingRequests />
-			</div>
-		</section>
-	);
+  const sideStats = [
+    {
+      title: "Pending Expenses",
+      value: formatAmount(0, "NGN"),
+    },
+    {
+      title: "Unpaid Receivables",
+      value: formatAmount(0, "NGN"),
+    },
+  ];
+
+  return (
+    <section className="lg:grid lg:grid-cols-3 lg:gap-8 max-lg:space-y-4">
+      <div className="col-span-2 space-y-6">
+        <Stats stats={stats} />
+      </div>
+      <div className="col-span-1 space-y-6">
+        <SideStats stats={sideStats} />
+      </div>
+      <div className="col-span-2 space-y-6">
+        <IncomeAndExpensesChart />
+        <RecentTransactions />
+      </div>
+      <div className="col-span-1 space-y-6">
+        <Projects />
+        <CreateCard />
+        <PendingRequests />
+      </div>
+    </section>
+  );
 };
 
 export default Dashboard;

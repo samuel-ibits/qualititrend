@@ -1,11 +1,9 @@
 "use client";
 import React from "react";
-import InvoiceTable from '../CreateInvoice/InvoiceTable';
-import InvoiceDetailHeader from './InvoiceDetailHeader';
+import InvoiceTable from "../CreateInvoice/InvoiceTable";
+import InvoiceDetailHeader from "./InvoiceDetailHeader";
 
 const InvoiceDetails = () => {
-
-
   return (
     <section className="w-full lg:px-11 py-3 lg:py-6 bg-white shadow-[rgba(80,80,80,0.1)_1px_1px_3px_3px] rounded-lg h-full">
       <div className="pt-14 pb-20">

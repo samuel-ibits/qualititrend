@@ -1,62 +1,45 @@
 // @ts-nocheck
-"use client"
-import React, { useState } from 'react';
-import GeneralSettings from './general';
-import Category from './category';
-import NotificationSettings from './notificaton';
-import WarehouseSettings from './warehouse';
-import PeopleSettings from './people';
-import ProjectSettings from './project';
-import ProjectStatusSettings from './projectStatus';
+"use client";
+import React, { useState } from "react";
+import GeneralSettings from "./general";
+import Category from "./category";
+import NotificationSettings from "./notificaton";
+import WarehouseSettings from "./warehouse";
+import PeopleSettings from "./people";
+import ProjectSettings from "./project";
+import ProjectStatusSettings from "./projectStatus";
 
 const Settings = () => {
-  const [activeTab, setActiveTab] = useState('General Settings');
+  const [activeTab, setActiveTab] = useState("General Settings");
 
   const renderTabContent = () => {
-    if (activeTab === 'General Settings') {
-      return (
-       <GeneralSettings/>
-      );
+    if (activeTab === "General Settings") {
+      return <GeneralSettings />;
     }
 
-    if (activeTab === 'People') {
-      return (
-        <PeopleSettings/>
-      );
+    if (activeTab === "People") {
+      return <PeopleSettings />;
     }
 
-    if (activeTab === 'Projects') {
-      return (
-       <ProjectSettings/>
-      );
-    }
-    
-    if (activeTab === 'Warehouse') {
-      return (
-        <WarehouseSettings/>
-      );
+    if (activeTab === "Projects") {
+      return <ProjectSettings />;
     }
 
-    if (activeTab === 'Project Status') {
-      return (
-        <ProjectStatusSettings/>
-      );
+    if (activeTab === "Warehouse") {
+      return <WarehouseSettings />;
     }
 
-    if (activeTab === 'Category') {
-      return (
-        <Category/>
-      );
+    if (activeTab === "Project Status") {
+      return <ProjectStatusSettings />;
     }
 
-    if (activeTab === 'Notifications') {
-      return (
-      <NotificationSettings/>
-
-      );
+    if (activeTab === "Category") {
+      return <Category />;
     }
-    
-  
+
+    if (activeTab === "Notifications") {
+      return <NotificationSettings />;
+    }
   };
 
   return (
@@ -75,29 +58,35 @@ const Settings = () => {
             Create Expense
         </button> */}
       </div>
-  
+
       {/* Navigation Tabs */}
       <nav className="flex flex-wrap md:flex-nowrap space-x-2 md:space-x-16 text-gray-700 mt-4 border-b w-full">
-        {['General Settings', 'People', 'Warehouse', 'Project Status','Category', 'Notifications'].map((tab) => (
+        {[
+          "General Settings",
+          "People",
+          "Warehouse",
+          "Project Status",
+          "Category",
+          "Notifications",
+        ].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`pb-2 ${
               activeTab === tab
-                ? 'border-b-2 border-orange-500 text-black font-semibold'
-                : 'text-gray-600'
+                ? "border-b-2 border-orange-500 text-black font-semibold"
+                : "text-gray-600"
             }`}
           >
             {tab}
           </button>
         ))}
       </nav>
-  
+
       {/* Render the content based on the active tab */}
       <div className="mt-4">{renderTabContent()}</div>
     </div>
   );
-  
 };
 
 export default Settings;

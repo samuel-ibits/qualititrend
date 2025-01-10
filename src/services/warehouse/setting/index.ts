@@ -1,100 +1,112 @@
 // services/warehouses.ts
 import {
-    CreateWarehouseRequest,
-    CreateWarehouseResponse,
-    FetchWarehousesRequest,
-    FetchWarehousesResponse,
-    UpdateWarehouseRequest,
-    UpdateWarehouseResponse,
-    DeleteWarehouseRequest,
-    DeleteWarehouseResponse,
+  CreateWarehouseRequest,
+  CreateWarehouseResponse,
+  FetchWarehousesRequest,
+  FetchWarehousesResponse,
+  UpdateWarehouseRequest,
+  UpdateWarehouseResponse,
+  DeleteWarehouseRequest,
+  DeleteWarehouseResponse,
 } from "@/types/services/warehouse/setting";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
 // Utility functions to handle request creation with optional params
 const getRequest = <T>(url: string, params?: T) => {
-    const paramsReducer = (acc: any, [key, value]: any) => {
-        if (value !== undefined && value !== null) {
-            acc[key] = value;
-        }
-        return acc;
-    };
+  const paramsReducer = (acc: any, [key, value]: any) => {
+    if (value !== undefined && value !== null) {
+      acc[key] = value;
+    }
+    return acc;
+  };
 
-    const cleanedParams = Object.entries(params || {}).reduce(paramsReducer, {});
-    const queryString = Object.keys(cleanedParams)
-        .map((key) => `${key}=${encodeURIComponent((cleanedParams as any)[key])}`)
-        .join("&");
+  const cleanedParams = Object.entries(params || {}).reduce(paramsReducer, {});
+  const queryString = Object.keys(cleanedParams)
+    .map((key) => `${key}=${encodeURIComponent((cleanedParams as any)[key])}`)
+    .join("&");
 
-    return {
-        url: params ? `${url}?${queryString}` : url,
-        method: "GET",
-    };
+  return {
+    url: params ? `${url}?${queryString}` : url,
+    method: "GET",
+  };
 };
 
 const postRequest = (url: string, details?: unknown) => ({
-    url,
-    method: "POST",
-    body: details,
+  url,
+  method: "POST",
+  body: details,
 });
 
 const patchRequest = (url: string, details?: unknown) => ({
-    url,
-    method: "PATCH",
-    body: details,
+  url,
+  method: "PATCH",
+  body: details,
 });
 
 const deleteRequest = (url: string) => ({
-    url,
-    method: "DELETE",
+  url,
+  method: "DELETE",
 });
 
 export const warehouses = createApi({
-    reducerPath: "warehouses",
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_APP_BASE_URL,
-        prepareHeaders: async (headers) => {
-            const session = await getSession();
-            const token = session?.user?.token;
+  reducerPath: "warehouses",
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_APP_BASE_URL,
+    prepareHeaders: async (headers) => {
+      const session = await getSession();
+      const token = session?.user?.token;
 
-            if (token) {
-                headers.set("authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
+  tagTypes: ["Warehouses", "WarehouseDetails"],
+  endpoints: (builder) => ({
+    // Create Warehouse Mutation
+    createWarehouse: builder.mutation<
+      CreateWarehouseResponse,
+      CreateWarehouseRequest
+    >({
+      query: (data) => postRequest("/create-warehouse", data),
+      invalidatesTags: ["Warehouses"],
     }),
-    tagTypes: ["Warehouses", "WarehouseDetails"],
-    endpoints: (builder) => ({
-        // Create Warehouse Mutation
-        createWarehouse: builder.mutation<CreateWarehouseResponse, CreateWarehouseRequest>({
-            query: (data) => postRequest("/create-warehouse", data),
-            invalidatesTags: ["Warehouses"],
-        }),
 
-        // Fetch Warehouses Query
-        fetchWarehouses: builder.query<FetchWarehousesResponse, FetchWarehousesRequest>({
-            query: (params) => getRequest("/fetch-warehouses", params),
-            providesTags: ["Warehouses"],
-        }),
-
-        // Update Warehouse Mutation
-        updateWarehouse: builder.mutation<UpdateWarehouseResponse, UpdateWarehouseRequest>({
-            query: ({ id, ...data }) => patchRequest(`/update-warehouse/${id}`, data),
-            invalidatesTags: ["Warehouses", "WarehouseDetails"],
-        }),
-
-        // Delete Warehouse Mutation
-        deleteWarehouse: builder.mutation<DeleteWarehouseResponse, DeleteWarehouseRequest>({
-            query: ({ id }) => deleteRequest(`/delete-warehouse/${id}`),
-            invalidatesTags: ["Warehouses"],
-        }),
+    // Fetch Warehouses Query
+    fetchWarehouses: builder.query<
+      FetchWarehousesResponse,
+      FetchWarehousesRequest
+    >({
+      query: (params) => getRequest("/fetch-warehouses", params),
+      providesTags: ["Warehouses"],
     }),
+
+    // Update Warehouse Mutation
+    updateWarehouse: builder.mutation<
+      UpdateWarehouseResponse,
+      UpdateWarehouseRequest
+    >({
+      query: ({ id, ...data }) => patchRequest(`/update-warehouse/${id}`, data),
+      invalidatesTags: ["Warehouses", "WarehouseDetails"],
+    }),
+
+    // Delete Warehouse Mutation
+    deleteWarehouse: builder.mutation<
+      DeleteWarehouseResponse,
+      DeleteWarehouseRequest
+    >({
+      query: ({ id }) => deleteRequest(`/delete-warehouse/${id}`),
+      invalidatesTags: ["Warehouses"],
+    }),
+  }),
 });
 
 // Export hooks generated by RTK Query for each endpoint
 export const {
-    useCreateWarehouseMutation,
-    useFetchWarehousesQuery,
-    useUpdateWarehouseMutation,
-    useDeleteWarehouseMutation,
+  useCreateWarehouseMutation,
+  useFetchWarehousesQuery,
+  useUpdateWarehouseMutation,
+  useDeleteWarehouseMutation,
 } = warehouses;

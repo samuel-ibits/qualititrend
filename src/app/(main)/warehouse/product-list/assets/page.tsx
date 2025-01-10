@@ -1,14 +1,12 @@
-import WarehouseAssets from "@/components/warehouse/WarehouseAssets"
+import WarehouseAssets from "@/components/warehouse/WarehouseAssets";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Warehouse | Assets",
+  title: "Warehouse | Assets",
 };
 
 const WarehouseAssetsPage = () => {
-    return (
-        <WarehouseAssets />
-    )
-}
+  return <WarehouseAssets />;
+};
 
-export default WarehouseAssetsPage
+export default WarehouseAssetsPage;

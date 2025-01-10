@@ -51,7 +51,7 @@ const InvoiceTable = ({ action }: { action?: boolean }) => {
                 >
                   {head.title}
                 </th>
-              ) : null
+              ) : null,
             )}
           </tr>
         </thead>

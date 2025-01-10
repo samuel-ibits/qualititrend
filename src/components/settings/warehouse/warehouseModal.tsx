@@ -1,7 +1,10 @@
 // @ts-nocheck
 
 import React, { useState, useEffect } from "react";
-import { useCreateWarehouseMutation, useUpdateWarehouseMutation } from "@/services/warehouse/setting";
+import {
+  useCreateWarehouseMutation,
+  useUpdateWarehouseMutation,
+} from "@/services/warehouse/setting";
 
 interface WarehouseModalProps {
   isOpen: boolean;
@@ -15,7 +18,11 @@ interface WarehouseModalProps {
   };
 }
 
-const WarehouseModal: React.FC<WarehouseModalProps> = ({ isOpen, onClose, initialData }) => {
+const WarehouseModal: React.FC<WarehouseModalProps> = ({
+  isOpen,
+  onClose,
+  initialData,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -23,8 +30,10 @@ const WarehouseModal: React.FC<WarehouseModalProps> = ({ isOpen, onClose, initia
     email: "",
   });
 
-  const [createWarehouse, { isLoading: isCreating }] = useCreateWarehouseMutation();
-  const [updateWarehouse, { isLoading: isUpdating }] = useUpdateWarehouseMutation();
+  const [createWarehouse, { isLoading: isCreating }] =
+    useCreateWarehouseMutation();
+  const [updateWarehouse, { isLoading: isUpdating }] =
+    useUpdateWarehouseMutation();
 
   useEffect(() => {
     if (initialData) {

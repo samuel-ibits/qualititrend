@@ -4,10 +4,9 @@ import MaterialTransferDetails from "@/components/requests/material-transfer-det
 import { useParams } from "next/navigation";
 
 const MaterialTransferRequestsDetailsPage = () => {
+  const params = useParams();
 
-    const params = useParams();
-
-    return <MaterialTransferDetails />;
+  return <MaterialTransferDetails />;
 };
 
 export default MaterialTransferRequestsDetailsPage;

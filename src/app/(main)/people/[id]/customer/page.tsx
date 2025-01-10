@@ -1,9 +1,7 @@
-import CustomerDetails from '@/components/people/CustomerDetails'
+import CustomerDetails from "@/components/people/CustomerDetails";
 
 const CustomerDetailsPage = () => {
-  return (
-    <CustomerDetails />
-  )
-}
+  return <CustomerDetails />;
+};
 
-export default CustomerDetailsPage
+export default CustomerDetailsPage;

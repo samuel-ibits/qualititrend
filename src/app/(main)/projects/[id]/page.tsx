@@ -4,15 +4,15 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const ProjectDetails = () => {
-	const router = useRouter();
+  const router = useRouter();
 
-	const params = useParams();
+  const params = useParams();
 
-	useEffect(() => {
-		router.push(`/projects/${params.id}/inventory`);
-	}, [params]);
+  useEffect(() => {
+    router.push(`/projects/${params.id}/inventory`);
+  }, [params]);
 
-	return <div></div>;
+  return <div></div>;
 };
 
 export default ProjectDetails;

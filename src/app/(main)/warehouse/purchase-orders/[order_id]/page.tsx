@@ -1,15 +1,12 @@
-import PurchaseOrderDetail from '@/components/warehouse/PurchaseOrder/detail'
-import { Metadata } from 'next';
+import PurchaseOrderDetail from "@/components/warehouse/PurchaseOrder/detail";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Warehouse | Purchase Order",
 };
 
 const PurchaseOrderPage = () => {
+  return <PurchaseOrderDetail />;
+};
 
-  return (
-    <PurchaseOrderDetail />
-  )
-}
-
-export default PurchaseOrderPage
+export default PurchaseOrderPage;

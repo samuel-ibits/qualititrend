@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface Item {
   label: string;
@@ -14,12 +14,12 @@ interface SectionProps {
 }
 
 const Section: React.FC<SectionProps> = ({ title, items, onAdd }) => {
-  const [newItem, setNewItem] = useState('');
+  const [newItem, setNewItem] = useState("");
 
   const handleAdd = () => {
     if (newItem.trim()) {
       onAdd(newItem.trim());
-      setNewItem('');
+      setNewItem("");
     }
   };
 
@@ -62,9 +62,9 @@ const Section: React.FC<SectionProps> = ({ title, items, onAdd }) => {
 
 const ProjectSettings: React.FC = () => {
   const [projectTypes, setProjectTypes] = useState<Item[]>([
-    { label: 'Building', checked: true },
-    { label: 'Concrete', checked: true },
-    { label: 'Furniture', checked: false },
+    { label: "Building", checked: true },
+    { label: "Concrete", checked: true },
+    { label: "Furniture", checked: false },
   ]);
 
   const handleAddProjectType = (label: string) => {

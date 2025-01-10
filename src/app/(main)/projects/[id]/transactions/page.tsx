@@ -1,7 +1,7 @@
 import Transactions from "@/components/projects/Transactions";
 
 const TransactionsPage = () => {
-	return <Transactions />;
+  return <Transactions />;
 };
 
 export default TransactionsPage;

@@ -1,14 +1,12 @@
-import SiteSupplyRequests from '@/components/warehouse/SiteSupplyRequests';
-import { Metadata } from 'next';
+import SiteSupplyRequests from "@/components/warehouse/SiteSupplyRequests";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Warehouse | Site Supply Requests",
 };
 
 const SiteSupplyRequestsPage = () => {
-  return (
-    <SiteSupplyRequests />
-  )
-}
+  return <SiteSupplyRequests />;
+};
 
-export default SiteSupplyRequestsPage
+export default SiteSupplyRequestsPage;

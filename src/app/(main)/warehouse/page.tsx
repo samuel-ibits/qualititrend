@@ -1,5 +1,3 @@
-
 export default function WarehousePage() {
-
-	return <main className=''></main>;
+  return <main className=""></main>;
 }

@@ -14,9 +14,9 @@ const CreateInvoiceForm = () => {
       date: "",
       customer: "",
       subTotal: "",
-      total: '',
+      total: "",
       amount: "",
-      dueAmount: '',
+      dueAmount: "",
     },
   });
 
@@ -80,7 +80,7 @@ const CreateInvoiceForm = () => {
                       {
                         "bg-[#FF69001A]":
                           option?.value === selectedOption?.value,
-                      }
+                      },
                     )}
                   >
                     <div className="w-full text-sm flex items-center space-x-2">

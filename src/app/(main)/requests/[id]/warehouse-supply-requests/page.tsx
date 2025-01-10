@@ -4,10 +4,9 @@ import WarehouseSupplyDetails from "@/components/requests/warehouse-supply-detai
 import { useParams } from "next/navigation";
 
 const WarehouseSupplyRequestsDetailsPage = () => {
+  const params = useParams();
 
-    const params = useParams();
-
-    return <WarehouseSupplyDetails />;
+  return <WarehouseSupplyDetails />;
 };
 
 export default WarehouseSupplyRequestsDetailsPage;

@@ -1,7 +1,10 @@
 // @ts-nocheck
 
 import React, { useState, useEffect } from "react";
-import { useCreateProjectStatusMutation, useUpdateProjectStatusMutation } from "@/services/projectStatus";
+import {
+  useCreateProjectStatusMutation,
+  useUpdateProjectStatusMutation,
+} from "@/services/projectStatus";
 
 interface ProjectStatusModalProps {
   isOpen: boolean;
@@ -15,7 +18,11 @@ interface ProjectStatusModalProps {
   };
 }
 
-const ProjectStatusModal: React.FC<ProjectStatusModalProps> = ({ isOpen, onClose, initialData }) => {
+const ProjectStatusModal: React.FC<ProjectStatusModalProps> = ({
+  isOpen,
+  onClose,
+  initialData,
+}) => {
   // Updated state to reflect the new fields
   const [formData, setFormData] = useState({
     name: "",
@@ -24,18 +31,27 @@ const ProjectStatusModal: React.FC<ProjectStatusModalProps> = ({ isOpen, onClose
     type: "ongoing", // Default value set to 'ongoing'
   });
 
-  const [createProjectStatus, { isLoading: isCreating }] = useCreateProjectStatusMutation();
-  const [updateProjectStatus, { isLoading: isUpdating }] = useUpdateProjectStatusMutation();
+  const [createProjectStatus, { isLoading: isCreating }] =
+    useCreateProjectStatusMutation();
+  const [updateProjectStatus, { isLoading: isUpdating }] =
+    useUpdateProjectStatusMutation();
 
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     } else {
-      setFormData({ name: "", description: "", percentage: "", type: "ongoing" });
+      setFormData({
+        name: "",
+        description: "",
+        percentage: "",
+        type: "ongoing",
+      });
     }
   }, [initialData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -44,7 +60,10 @@ const ProjectStatusModal: React.FC<ProjectStatusModalProps> = ({ isOpen, onClose
     try {
       if (initialData?.id) {
         // Update existing projectStatus - Check that it's using the correct method (PATCH/PUT)
-        const result = await updateProjectStatus({ id: initialData.id, ...formData }).unwrap();
+        const result = await updateProjectStatus({
+          id: initialData.id,
+          ...formData,
+        }).unwrap();
         if (result) {
           onClose(); // Close modal after success
         }

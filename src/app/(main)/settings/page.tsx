@@ -3,16 +3,16 @@ import GeneralSettings from "@/components/settings/general";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Settings",
+  title: "Settings",
 };
 
 const SettingsPage = () => {
-	return (
-		<>
-		{/* <GeneralSettings/> */}
-		<Settings/>
-		
-		</>)
+  return (
+    <>
+      {/* <GeneralSettings/> */}
+      <Settings />
+    </>
+  );
 };
 
 export default SettingsPage;

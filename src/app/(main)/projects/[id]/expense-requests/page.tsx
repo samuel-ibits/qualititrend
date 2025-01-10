@@ -1,7 +1,7 @@
 import ExpenseRequests from "@/components/projects/ExpenseRequests";
 
 const ExpenseRequestsPage = () => {
-	return <ExpenseRequests />;
+  return <ExpenseRequests />;
 };
 
 export default ExpenseRequestsPage;

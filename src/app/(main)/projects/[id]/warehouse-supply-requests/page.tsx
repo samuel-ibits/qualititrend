@@ -1,7 +1,7 @@
 import WarehouseSupplyRequests from "@/components/projects/WarehouseSupplyRequests";
 
 const WarehouseSupplyRequestsPage = () => {
-	return <WarehouseSupplyRequests />;
+  return <WarehouseSupplyRequests />;
 };
 
 export default WarehouseSupplyRequestsPage;

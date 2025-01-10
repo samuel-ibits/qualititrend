@@ -1,28 +1,25 @@
 import { BaseResponse } from "../common";
 
 export type CreateItemRequest = {
-  name: string,
-  item_code: string,
-  unit_of_measurement: string,
+  name: string;
+  item_code: string;
+  unit_of_measurement: string;
 
-  status: number,
-  item_type: number,
+  status: number;
+  item_type: number;
 
-  quantity: number,
-  cost: number,
-
+  quantity: number;
+  cost: number;
 };
 
 export type CreateItemResponse = {
-  data: CreateItemRequest
+  data: CreateItemRequest;
 } & BaseResponse;
-
 
 export type FetchProductsRequest = {
   perPage?: number;
   /* type?: "ongoing" | "completed"; */
 };
-
 
 export interface Product {
   id: string;
@@ -40,36 +37,42 @@ export interface Product {
   updated_at: string;
 
   item_category: string;
-  defualt_inventory:string;
+  defualt_inventory: string;
 }
-
-
 
 export type FetchProductsResponse = {
   data: {
-    data: Product[],
-    pagination: Pagination
-  },
-} & BaseResponse
-
+    data: Product[];
+    pagination: Pagination;
+  };
+} & BaseResponse;
 
 export interface Pagination {
-  total: number
-  total_pages: number
-  perPage: number
-  page: number
-  current_page_total: number
-  from: number
-  to: number
-  count: number
+  total: number;
+  total_pages: number;
+  perPage: number;
+  page: number;
+  current_page_total: number;
+  from: number;
+  to: number;
+  count: number;
 }
 
 export type FetchWarehouseProductRequest = {
   id: string;
 };
 
-export type FetchWareHouseProductData = Omit<Product, "id" | "category_id" | "inventory_id" | "created_by" | "updated_by" | "created_at" | "updated_at" >;
+export type FetchWareHouseProductData = Omit<
+  Product,
+  | "id"
+  | "category_id"
+  | "inventory_id"
+  | "created_by"
+  | "updated_by"
+  | "created_at"
+  | "updated_at"
+>;
 
 export type FetchWarehouseProductResponse = {
   data: FetchWareHouseProductData;
-} & BaseResponse
+} & BaseResponse;

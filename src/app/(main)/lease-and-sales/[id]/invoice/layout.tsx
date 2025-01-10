@@ -3,7 +3,7 @@
 import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import Stats from "@/components/global/Stats";
-import Tab from '@/components/global/Tab';
+import Tab from "@/components/global/Tab";
 import Icons from "@/components/icons";
 import { cn, formatAmount } from "@/lib/utils";
 import Link from "next/link";
@@ -91,19 +91,19 @@ const Layout = ({ children }: LayoutProps) => {
         </div>
       </div>
       <div className="flex justify-between gap-6 items-center mb-10 lg:justify-end">
-        <button >
+        <button>
           <Icons.EditFillBorderIcon />
         </button>
-        <button >
+        <button>
           <Icons.DownloadIcon />
         </button>
         <button>
           <Icons.MailBoxIcon />
         </button>
-        <button >
+        <button>
           <Icons.PDFIcon />
         </button>
-        <button >
+        <button>
           <Icons.PrinterIcon />
         </button>
       </div>

@@ -1,12 +1,12 @@
 import { Metadata } from "next";
-import Income from "@/components/Finances/income"
+import Income from "@/components/Finances/income";
 
 export const metadata: Metadata = {
-	title: "Finances",
+  title: "Finances",
 };
 
 const FinancesPage = () => {
-	return <Income />
+  return <Income />;
 };
 
 export default FinancesPage;

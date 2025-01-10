@@ -85,7 +85,7 @@ const Icons = {
   DownloadIcon,
   MailBoxIcon,
   PrinterIcon,
-  PDFIcon
+  PDFIcon,
 };
 
 export default Icons;

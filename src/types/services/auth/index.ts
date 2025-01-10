@@ -1,26 +1,26 @@
 export type SignInRequest = {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 };
 
-export type SignInResponse = any;    
+export type SignInResponse = any;
 
 export type InitiateResetPasswordRequest = {
-    email: string;
+  email: string;
 };
 
 export type InitiateResetPasswordResponse = {
-    message: string;
-    status: string;
+  message: string;
+  status: string;
 };
 
 export type CompleteResetPasswordRequest = {
-    email: string;
-    token: string;
-    password: string;
+  email: string;
+  token: string;
+  password: string;
 };
 
 export type CompleteResetPasswordResponse = {
-    message: string;
-    status: string;
+  message: string;
+  status: string;
 };

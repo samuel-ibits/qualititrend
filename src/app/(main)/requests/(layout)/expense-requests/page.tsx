@@ -1,15 +1,13 @@
-import ExpenseRequests from '@/components/requests/expense';
-import { Metadata } from 'next';
-import React from 'react'
+import ExpenseRequests from "@/components/requests/expense";
+import { Metadata } from "next";
+import React from "react";
 
 export const metadata: Metadata = {
-    title: "Requests | Expense",
+  title: "Requests | Expense",
 };
 
 const ExpenseRequestsPage = () => {
-    return (
-        <ExpenseRequests />
-    )
-}
+  return <ExpenseRequests />;
+};
 
-export default ExpenseRequestsPage
+export default ExpenseRequestsPage;
