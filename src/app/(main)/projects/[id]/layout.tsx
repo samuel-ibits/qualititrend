@@ -98,7 +98,7 @@ const ProjectDetailsLayout = ({ children }: ProjectDetailsLayoutProps) => {
         },
         {
           label: "Completion Date",
-          value: project.data.completion_date,
+          value: project.data.proposed_completed_date?project.data.proposed_completed_date:'Not Specified' ,
         },
         {
           label: "Total Expenses",
@@ -110,7 +110,7 @@ const ProjectDetailsLayout = ({ children }: ProjectDetailsLayoutProps) => {
         },
         {
           label: "Total Income",
-          value: formatAmount(project.data.invoice_value, "NGN"),
+          value: formatAmount(project.data.total_income, "NGN"),
         },
         {
           label: "Cash Balance",
@@ -118,7 +118,7 @@ const ProjectDetailsLayout = ({ children }: ProjectDetailsLayoutProps) => {
         },
         {
           label: "Total Units",
-          value: String(project.data.total_units),
+          value: String(project.data.total_units.length),
         },
       ]
     : [];

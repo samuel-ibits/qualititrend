@@ -43,7 +43,11 @@ const patchRequest = (url: string, details?: unknown) => ({
   method: "PATCH",
   body: details,
 });
-
+const putRequest = (url: string, details?: unknown) => ({
+  url,
+  method: "PUT",
+  body: details,
+});
 const deleteRequest = (url: string) => ({
   url,
   method: "DELETE",
@@ -88,7 +92,7 @@ export const warehouses = createApi({
       UpdateWarehouseResponse,
       UpdateWarehouseRequest
     >({
-      query: ({ id, ...data }) => patchRequest(`/update-warehouse/${id}`, data),
+      query: ({ id, ...data }) => putRequest(`/update-warehouse/${id}`, data),
       invalidatesTags: ["Warehouses", "WarehouseDetails"],
     }),
 

@@ -112,7 +112,11 @@ const CategoryComponent: React.FC = () => {
     setSelectedCategoryId(event.target.value || null);
   };
 
-  const handleOpenModal = () => setIsModalOpen(true);
+  const handleOpenModal = () => {setIsModalOpen(true);
+    setNewCategory({
+      type: selectedCategoryId,
+  });
+}
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleNewCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,9 +128,9 @@ const CategoryComponent: React.FC = () => {
 
   const handleSave = async () => {
     try {
+      const { id, type, name, description } = newCategory;
+      console.log("newCategory ", newCategory);
       if (isEdit) {
-        const { id, type, name, description } = newCategory;
-        console.log("newCategory ", newCategory);
         const response = await updateCategory({
           id,
           type,
@@ -141,13 +145,19 @@ const CategoryComponent: React.FC = () => {
         }
         setIsEdit(false);
       } else {
-        const response = await createCategory(newCategory).unwrap();
+        const response = await createCategory({
+          id,
+          type,
+          name,
+          description,
+        }).unwrap();
         if (response.success) {
           setStatus("success");
         } else {
           setStatus("error");
         }
       }
+      
     } catch (error) {
       console.error("Failed to create category:", error);
       setStatus("error");
@@ -314,7 +324,7 @@ const CategoryComponent: React.FC = () => {
                 <tr>
                   <td colSpan={3} className="text-center text-gray-500 py-4">
                     No categories available.{" "}
-                    <button className="text-blue-500 hover:underline">
+                    <button className="text-blue-500 hover:underline"  onClick={handleOpenModal}>
                       Create New Category
                     </button>
                   </td>

@@ -14,23 +14,23 @@ const ProjectDetails = ({ project }: Props) => {
     },
     {
       label: "Project Type",
-      value: project.type,
+      value: project.project_type,
     },
     {
       label: "Project Manager",
-      value: project.manager?.first_name,
+      value: project.project_manager?.first_name,
     },
     {
       label: "Project Summary",
-      value: project.summary,
+      value: project.project_summary,
     },
     {
       label: "Project Supervisor",
-      value: project.supervisor?.first_name,
+      value: project.project_supervisor?.first_name,
     },
     {
       label: "Status",
-      value: project.status || "",
+      value: project.status?.type || "",
       isStatus: true,
     },
   ];

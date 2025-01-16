@@ -76,7 +76,7 @@ const ProjectInventory = () => {
   if (isError) {
     return <p>Error loading project</p>;
   }
-
+console.log('tttt',data);
   return (
     <section>
       <Table
