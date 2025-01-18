@@ -7,23 +7,16 @@ import Table from "@/components/global/Table";
 import Icons from "@/components/icons";
 import { cn, formatAmount, numberWithCommas } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/global/Button";
 import { AddBuildingUnitType } from "@/types/services/projects/buildings";
 import { useFetchCategoriesQuery } from "@/services/categories";
 import { _Select } from "@/components/global/MultipleSelectInput";
+import { useCreateBuildingUnitMutation, useFetchBuildingUnitsQuery } from "@/services/buildingUnits";
+import { CreateBuildingUnitRequest } from "@/types/services/buildingUnit";
+import { toast, ToastContainer } from "react-toastify";
 
-const UNIT_PURPOSES = [
-  {
-    title: "sale",
-    value: "sale",
-  },
-  {
-    title: "lease",
-    value: "lease",
-  },
-];
 
 type TableProps = {
   data: AddBuildingUnitType[];
@@ -31,13 +24,23 @@ type TableProps = {
 };
 
 export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
+  const [buildingUnits, setBuildingUnits] = useState([]);
+
+  const [is_add_unit_type_modal_open, setIsAddUnitTypeModalOpen] =
+  useState(false);
   const { data: other_room_options } = useFetchCategoriesQuery({
     type: "other_rooms",
   });
-
+  const { data: building_units } = useFetchCategoriesQuery({
+    type: "building_unit_type",
+  });
   const { data: building_unit_type_options } = useFetchCategoriesQuery({
     type: "building_unit_type",
   });
+  const [
+    createBuildingUnitMutation, 
+    { isLoading, isSuccess, isError, error },
+  ] = useCreateBuildingUnitMutation();
 
   const methods = useForm<AddBuildingUnitType>({
     defaultValues: {
@@ -66,26 +69,44 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
     unit_purpose,
   } = watch();
 
-  async function onSubmit() {
-    const new_unit: AddBuildingUnitType = {
-      unit_name,
-      unit_type_id: unit_type.id,
-      unit_type,
-      number_of_units,
-      number_of_rooms,
-      other_rooms,
-      price,
-      unit_description,
-      unit_purpose: unit_purpose,
+  useEffect(() => {
+    const fetchUnits = async () => {
+      try {
+        const response = await fetchBuildingUnits();
+        setBuildingUnits(response.data); // Ensure `response.data` matches your API response structure
+      } catch (error) {
+        console.error("Failed to fetch building units:", error);
+      }
     };
+    fetchUnits();
+  }, []);
 
-    const _data = data || [];
 
-    setData([..._data, new_unit]);
-    reset();
-    closeAddUnitTypeModal();
+  async function onSubmit(data: any) {
+    const newUnit: CreateBuildingUnitRequest = {
+      project_id: 1, // Replace with the actual project ID
+      name: data.unit_name,
+      type: data.unit_type?.id,
+      quantity: data.number_of_units,
+      number_of_rooms: data.number_of_rooms,
+      other_rooms: data.other_rooms?.map((room: any) => Number(room.value)),
+      unit_price: parseFloat(data.price.replace(/,/g, "")), // Convert formatted price to a float
+      description: data.unit_description,
+    };
+    try {
+      const response = await createBuildingUnitMutation(newUnit).unwrap();
+      if (response.success) {
+        setIsAddUnitTypeModalOpen(false);
+        toast.success("Building unit created successfully!");
+      } else {
+        toast.error(`Error: ${response.message}`);
+      }
+    } catch (error) {
+      console.error("Failed to create building unit:", error);
+      toast.error("An error occurred while creating the building unit.");
+    }
   }
-
+  
   const tableHeadData = [
     {
       title: "unit name",
@@ -115,14 +136,10 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
       title: "unit description",
       key: "unit_description",
     },
-    {
-      title: "unit purpose",
-      key: "unit_purpose",
-    },
+  
   ];
 
-  const [is_add_unit_type_modal_open, setIsAddUnitTypeModalOpen] =
-    useState(false);
+
 
   function openAddUnitTypeModal() {
     setIsAddUnitTypeModalOpen(true);
@@ -148,7 +165,6 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
             other_rooms,
             price,
             unit_description,
-            unit_purpose,
           } = unit;
           return (
             <tr
@@ -184,9 +200,7 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
               <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
                 {unit_description}
               </td>
-              <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
-                {unit_purpose}
-              </td>
+            
             </tr>
           );
         }}
@@ -207,123 +221,98 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
           exit={{ x: -300, opacity: 0 }}
           className="w-full"
         >
-          <section className="w-full">
-            <FormProvider {...methods}>
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-                className="max-lg:space-y-6 lg:grid lg:grid-cols-2 lg:gap-x-9 gap-y-6"
-              >
-                <Input
-                  name="Unit Name"
-                  label="unit_name"
-                  rules={["required"]}
-                  placeholder="Enter unit name"
-                  onChange={(e) => setValue("unit_name", e.target.value)}
-                />
+         <section className="w-full">
+  <FormProvider {...methods}>
+    <form
+      onSubmit={methods.handleSubmit(onSubmit)}
+      className="max-lg:space-y-6 lg:grid lg:grid-cols-2 lg:gap-x-9 gap-y-6"
+    >
+      <Input
+        name="unit_name"
+        label="Unit Name"
+        rules={["required"]}
+        placeholder="Enter unit name"
+      />
 
-                <_Select
-                  label="Unit type"
-                  name="unit_type"
-                  required
-                  options={
-                    building_unit_type_options?.data?.categories?.map(
-                      (buidling_unit_type_option) => {
-                        return {
-                          name: buidling_unit_type_option?.name,
-                          id: buidling_unit_type_option,
-                        };
-                      },
-                    ) || []
-                  }
-                  name_key="name"
-                  value_key="id"
-                />
+      <_Select
+        label="Unit Type"
+        name="unit_type"
+        required
+        options={
+          building_unit_type_options?.data?.map((option) => ({
+            name: option?.name,
+            id: option,
+          })) || []
+        }
+        name_key="name"
+        value_key="id"
+      />
 
-                <_Select
-                  label="Other Rooms"
-                  name="other_rooms"
-                  placeholder="Select other rooms"
-                  multiple
-                  required
-                  options={
-                    other_room_options?.data?.categories?.map((other_room) => {
-                      return {
-                        name: other_room?.name,
-                        id: other_room,
-                      };
-                    }) || []
-                  }
-                  name_key="name"
-                  value_key="id"
-                />
+      <_Select
+        label="Other Rooms"
+        name="other_rooms"
+        placeholder="Select other rooms"
+        multiple
+        required
+        options={
+          other_room_options?.data?.map((room) => ({
+            name: room?.name,
+            id: room.id,
+          })) || []
+        }
+        name_key="name"
+        value_key="id"
+      />
 
-                <Input
-                  name="Number of Units"
-                  label="number of units"
-                  rules={["required"]}
-                  placeholder="1"
-                  type="number"
-                  onChange={(e) =>
-                    setValue("number_of_units", Number(e.target.value))
-                  }
-                />
+      <Input
+        name="number_of_units"
+        label="Number of Units"
+        rules={["required"]}
+        placeholder="1"
+        type="number"
+      />
 
-                <Input
-                  name="Unit Price"
-                  label="unit price"
-                  rules={["required"]}
-                  placeholder="1"
-                  /* type="number" */
-                  type="tel"
-                  onChange={(e) => {
-                    setValue(
-                      "price",
-                      numberWithCommas(e?.target.value.replace(/[^0-9.]/g, "")),
-                    );
-                  }}
-                />
+      <Input
+        name="price"
+        label="Unit Price"
+        rules={["required"]}
+        placeholder="1"
+        type="tel"
+        onChange={(e) => {
+          const value = numberWithCommas(e.target.value.replace(/[^0-9.]/g, ""));
+          setValue("price", value);
+        }}
+      />
 
-                <Input
-                  name="Number of Rooms Per Unit"
-                  label="number of rooms"
-                  rules={["required"]}
-                  placeholder="1"
-                  type="number"
-                  onChange={(e) =>
-                    setValue("number_of_rooms", Number(e.target.value))
-                  }
-                />
+      <Input
+        name="number_of_rooms"
+        label="Number of Rooms Per Unit"
+        rules={["required"]}
+        placeholder="1"
+        type="number"
+      />
 
-                <_Select
-                  label="Unit Purpose"
-                  name="unit_purpose"
-                  required
-                  is_string_options
-                  options={UNIT_PURPOSES}
-                />
+      <Input
+        name="unit_description"
+        label="Unit Description"
+        rules={["required"]}
+        placeholder="Civil Engineering Project: Lokogoma Estate"
+        tag="textarea"
+      />
 
-                <Input
-                  name="Unit Description"
-                  label="unit description"
-                  rules={["required"]}
-                  placeholder="Civil Engineering Project: Lokogoma Estate"
-                  tag="textarea"
-                  onChange={(e) => setValue("unit_description", e.target.value)}
-                />
+      <div className="lg:col-span-2 flex justify-center py-4">
+        <Button
+          type="submit"
+          disabled={!isValid}
+          className="w-full lg:w-[240px]"
+        >
+          Add
+        </Button>
+      </div>
+    </form>
+  </FormProvider>
+</section>
 
-                <div className="lg:col-span-2 flex justify-center py-4">
-                  <Button
-                    type="button"
-                    disabled={!isValid}
-                    onClick={methods.handleSubmit(onSubmit)}
-                    className="w-full lg:w-[240px]"
-                  >
-                    Add
-                  </Button>
-                </div>
-              </form>
-            </FormProvider>
-          </section>
         </motion.div>
       </Modal>
 

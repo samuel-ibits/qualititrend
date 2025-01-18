@@ -9,7 +9,8 @@ import { generalSettings } from "@/services/generalSettings";
 import { warehouse } from "@/services/warehouse";
 import { projectStatus } from "@/services/projectStatus";
 import { warehouses } from "@/services/warehouse/setting";
-import { notificationsApi } from "@/services/notifications"; // Adjust the path as needed
+import { notificationsApi } from "@/services/notifications";
+import { buildingUnits } from "@/services/buildingUnits";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     [generalSettings.reducerPath]: generalSettings.reducer,
     [warehouses.reducerPath]: warehouses.reducer,
     [notificationsApi.reducerPath]: notificationsApi.reducer,
+    [buildingUnits.reducerPath]: buildingUnits.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -32,6 +34,7 @@ export const store = configureStore({
       staff.middleware,
       categories.middleware,
       generalSettings.middleware,
+      buildingUnits.middleware,
       notificationsApi.middleware,
       warehouses.middleware,
       rtkQueryErrorLogger,

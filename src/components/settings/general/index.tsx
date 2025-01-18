@@ -254,6 +254,54 @@ const GeneralSettings = () => {
               { label: "Address", value: address, setValue: setAddress },
               { label: "RC Number", value: rcNumber, setValue: setRcNumber },
               { label: "Tax ID", value: taxId, setValue: setTaxId },
+              // { label: "Bank Name", value: bankName, setValue: setBankName },
+              // {
+              //   label: "Account Number",
+              //   value: accountNumber,
+              //   setValue: setAccountNumber,
+              // },
+              // {
+              //   label: "Account Name",
+              //   value: accountName,
+              //   setValue: setAccountName,
+              // },
+            ].map((input, index) => (
+              <div className="flex flex-col space-y-2" key={index}>
+                <label className="block text-sm font-medium text-gray-700">
+                  {input.label}
+                </label>
+                <input
+                  type="text"
+                  className="p-2 w-full border border-gray-300 rounded-md"
+                  value={input.value}
+                  onChange={(e) => input.setValue(e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Add New Account */}
+          {/* <div className="flex justify-start mt-4">
+            <button className="text-orange-500 hover:underline flex items-center">
+              <FaPlus className="mr-1" /> Add New Account
+            </button>
+          </div> */}
+        </div>
+
+        {/* Save Changes Button */}
+        <div className="flex justify-center">
+          <button
+            onClick={handleSaveChanges}
+            className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 w-full sm:w-auto"
+          >
+            Save Changes
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            {/* Form Inputs */}
+            {[
+              
               { label: "Bank Name", value: bankName, setValue: setBankName },
               {
                 label: "Account Number",
@@ -286,16 +334,6 @@ const GeneralSettings = () => {
               <FaPlus className="mr-1" /> Add New Account
             </button>
           </div>
-        </div>
-
-        {/* Save Changes Button */}
-        <div className="flex justify-center">
-          <button
-            onClick={handleSaveChanges}
-            className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 w-full sm:w-auto"
-          >
-            Save Changes
-          </button>
         </div>
 
         {/* Terms & Conditions Section */}

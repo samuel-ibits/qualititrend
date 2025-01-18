@@ -60,7 +60,10 @@ const Table = <T,>({
             { "mb-4": title },
           )}
         >
-          <h3 className="text-base lg:text-xl font-bold">{title}</h3>
+          <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold ">
+          {title}
+    </h3>
+          {/* <h3 className="text-base lg:text-xl font-bold">}</h3> */}
           <div className="hidden xl:block">
             {tableHeaderLeftComponent && tableHeaderLeftComponent()}
           </div>
