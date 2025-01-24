@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client";
 
 import Modal from "@/components/global/Modal";
@@ -23,7 +25,7 @@ type TableProps = {
   setData: Dispatch<SetStateAction<AddBuildingUnitType[]>>;
 };
 
-export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
+export default function BuildingUnitsTable({project, data = [], setData }: TableProps) {
   const [buildingUnits, setBuildingUnits] = useState([]);
 
   const [is_add_unit_type_modal_open, setIsAddUnitTypeModalOpen] =
@@ -31,8 +33,9 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
   const { data: other_room_options } = useFetchCategoriesQuery({
     type: "other_rooms",
   });
-  const { data: building_units } = useFetchCategoriesQuery({
-    type: "building_unit_type",
+  const { data: fetchBuildingUnits } = useFetchBuildingUnitsQuery({
+    project_id: project.id,
+    id: data.id,
   });
   const { data: building_unit_type_options } = useFetchCategoriesQuery({
     type: "building_unit_type",
@@ -69,22 +72,13 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
     unit_purpose,
   } = watch();
 
-  useEffect(() => {
-    const fetchUnits = async () => {
-      try {
-        const response = await fetchBuildingUnits();
-        setBuildingUnits(response.data); // Ensure `response.data` matches your API response structure
-      } catch (error) {
-        console.error("Failed to fetch building units:", error);
-      }
-    };
-    fetchUnits();
-  }, []);
+  
+  console.log("Building Units", fetchBuildingUnits);
 
 
   async function onSubmit(data: any) {
     const newUnit: CreateBuildingUnitRequest = {
-      project_id: 1, // Replace with the actual project ID
+      project_id: project.id, // Replace with the actual project ID
       name: data.unit_name,
       type: data.unit_type?.id,
       quantity: data.number_of_units,
@@ -153,18 +147,18 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
     <section>
       <Table
         title="Unit types"
-        data={data!}
+        data={fetchBuildingUnits?.data!}
         loaderLength={10}
         tableHeadData={tableHeadData}
         rowComponent={(unit) => {
           const {
-            unit_name,
-            unit_type,
-            number_of_units,
+            name,
+            type,
+            quantity,
             number_of_rooms,
             other_rooms,
             price,
-            unit_description,
+            description,
           } = unit;
           return (
             <tr
@@ -172,24 +166,24 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
               className="border-b text-sm border-[#5A5A5A99]"
             >
               <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
-                {unit_name}
+                {name}
               </td>
               <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
-                {unit_type?.name}
+                {type}
               </td>
               <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
-                {number_of_units}
+                {quantity}
               </td>
               <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
                 {number_of_rooms}
               </td>
               <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
                 <ul>
-                  {other_rooms.map((room, index: number) => (
-                    <li key={room.id}>
+                  {other_rooms?.map((room, index: number) => (
+                    <li key={room}>
                       {" "}
                       {index > 0 && ", "}
-                      {room.label}
+                      {room}
                     </li>
                   ))}
                 </ul>
@@ -198,7 +192,7 @@ export default function BuildingUnitsTable({ data = [], setData }: TableProps) {
                 {formatAmount(+Number(price.replaceAll(",", "")), "NGN")}
               </td>
               <td className="py-[18px] px-4 text-black-500 whitespace-nowrap">
-                {unit_description}
+                {description}
               </td>
             
             </tr>

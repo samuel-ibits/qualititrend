@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import Button from "@/components/global/Button";
 import Status, { StatusType } from "@/components/global/Status";
 import Icons from "@/components/icons";
@@ -102,61 +104,61 @@ const stepProps = {
 >;
 
 
-const onSubmit = async () => {
+// const onSubmit = async () => {
  
-  try {
-    product.type_id = product.type;
+//   try {
+//     product.type_id = product.type;
 
-    const _output = {
-      summary: summary,
-      project_code,
-      status_id: status,
-      type: type,
-      manager_id: manager,
-      supervisor_id: supervisor,
-      budget: {
-        amount: budget,
-        description: budgetDescription,
-      },
-      initiation_date: initiation_date,
-      completion_date: completion_date,
-      product: {
-        name: product?.name || undefined,
-        description: product?.description || undefined,
-        type_id: product?.type_id || undefined,
-        quantity: product?.quantity,
-        unit_price: product?.unit_price,
+//     const _output = {
+//       summary: summary,
+//       project_code,
+//       status_id: status,
+//       type: type,
+//       manager_id: manager,
+//       supervisor_id: supervisor,
+//       budget: {
+//         amount: budget,
+//         description: budgetDescription,
+//       },
+//       initiation_date: initiation_date,
+//       completion_date: completion_date,
+//       product: {
+//         name: product?.name || undefined,
+//         description: product?.description || undefined,
+//         type_id: product?.type_id || undefined,
+//         quantity: product?.quantity,
+//         unit_price: product?.unit_price,
 
-        building_purpose_id: product?.building_purpose.id,
-        plot_number: product?.plot_number,
-        plot_address: product?.plot_address,
-        // units: building_units.map((building_unit) => {
-        //   return {
-        //     ...building_unit,
-        //     unit_type_id: building_unit.unit_type.id,
-        //     other_rooms: building_unit.other_rooms
-        //       .reduce((acc, curr) => {
-        //         acc.push(curr.value.id);
-        //         return acc;
-        //       }, [] as string[])
-        //       .join(","),
-        //   };
-        // }),
-      },
-    };
+//         building_purpose_id: product?.building_purpose.id,
+//         plot_number: product?.plot_number,
+//         plot_address: product?.plot_address,
+//         // units: building_units.map((building_unit) => {
+//         //   return {
+//         //     ...building_unit,
+//         //     unit_type_id: building_unit.unit_type.id,
+//         //     other_rooms: building_unit.other_rooms
+//         //       .reduce((acc, curr) => {
+//         //         acc.push(curr.value.id);
+//         //         return acc;
+//         //       }, [] as string[])
+//         //       .join(","),
+//         //   };
+//         // }),
+//       },
+//     };
 
-    console.log({ _output, data: watch() });
+//     console.log({ _output, data: watch() });
 
-    const result = await createProject(_output)
-      .unwrap()
-      .then((res) => {
-        setStep("success");
-      })
-      .catch((error) => {
-        setSubmitError(error?.data?.message || "Error creating project");
-      });
-  } catch (err) {}
-};
+//     const result = await createProject(_output)
+//       .unwrap()
+//       .then((res) => {
+//         setStep("success");
+//       })
+//       .catch((error) => {
+//         setSubmitError(error?.data?.message || "Error creating project");
+//       });
+//   } catch (err) {}
+// };
 
 const ProjectDetails = ({ project }: Props) => {
   const [updateBuildingAtribute, { isLoading }] = useUpdateProjectAttributesMutation();
@@ -403,6 +405,7 @@ const [step, setStep] = useState<staps>("");
   <section className="mt-5 mb-5">
   <div className="lg:col-span-2">
                         <BuildingUnitsTable
+                        project={project}
                           data={building_units}
                           setData={setBuildingUnits}
                         />

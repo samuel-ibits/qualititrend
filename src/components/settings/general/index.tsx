@@ -297,7 +297,9 @@ const GeneralSettings = () => {
             Save Changes
           </button>
         </div>
-
+        <h2 className="font-semibold text-lg mb-4 bg-orange-100 p-4 rounded-md">
+            Account Details
+          </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
             {/* Form Inputs */}
             {[
@@ -327,7 +329,7 @@ const GeneralSettings = () => {
               </div>
             ))}
           </div>
-
+          
           {/* Add New Account */}
           <div className="flex justify-start mt-4">
             <button className="text-orange-500 hover:underline flex items-center">
@@ -358,7 +360,7 @@ const GeneralSettings = () => {
             Save Changes
           </button>
         </div>
-      </div>
+      
     </>
   );
 };
