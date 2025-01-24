@@ -114,7 +114,7 @@ const ProjectDetailsLayout = ({ children }: ProjectDetailsLayoutProps) => {
         },
         {
           label: "Cash Balance",
-          value: formatAmount(Number(project.data.balance), "NGN"),
+          value: formatAmount(Number(project.data.total_income -project.data.total_expenses), "NGN"),
         },
         {
           label: "Total Units",
