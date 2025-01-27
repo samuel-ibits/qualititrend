@@ -3,7 +3,7 @@
 import Button from "@/components/global/Button";
 import Status, { StatusType } from "@/components/global/Status";
 import Icons from "@/components/icons";
-import { cn } from "@/lib/utils";
+import { cn, numberWithCommas } from "@/lib/utils";
 import { Project } from "@/types/services/projects";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -107,7 +107,7 @@ const stepProps = {
 // const onSubmit = async () => {
  
 //   try {
-//     product.type_id = product.type;
+//     type_id = type;
 
 //     const _output = {
 //       summary: summary,
@@ -162,6 +162,7 @@ const stepProps = {
 
 const ProjectDetails = ({ project }: Props) => {
   const [updateBuildingAtribute, { isLoading }] = useUpdateProjectAttributesMutation();
+  const [submit_error, setSubmitError] = useState("");
 
    const [building_units, setBuildingUnits] = useState<AddBuildingUnitType[]>(
       [],
@@ -251,6 +252,50 @@ const ProjectDetails = ({ project }: Props) => {
       setSubmitError(error?.data?.message || "Error creating project");
     }
   };
+  const onSubmitFunitureAttribute = async (data) => {
+     
+    try {
+      const _output = {
+        id:project.id,
+        name:project.name,
+        type: project.project_type ,
+        quantity: data.quantity,
+        description: data.description,
+        unit_price: data.unit_price,
+      };
+  
+      console.log("Submitting Furniture Attribute:", _output);
+  
+      const result = await updateBuildingAtribute(_output).unwrap();
+      setStep("success");
+    } catch (error) {
+      console.error("Error submitting funiture attribute:", error);
+      setSubmitError(error?.data?.message || "Error creating project");
+    }
+  };
+
+
+  const onSubmitConcreateAttribute = async (data) => {
+    try {
+      const _output = {
+        id:project.id,
+        type: project.project_type ,
+        quantity: data.quantity,
+        lot: data?.lot,
+        building_purpose: data.building_purpose.value,
+        plot_number: data.plot_number,
+        plot_address: data.plot_address,
+      };
+  
+      console.log("Submitting Furniture Attribute:", _output);
+  
+      const result = await updateBuildingAtribute(_output).unwrap();
+      setStep("success");
+    } catch (error) {
+      console.error("Error submitting building attribute:", error);
+      setSubmitError(error?.data?.message || "Error creating project");
+    }
+  };
   
   const data = [
     {
@@ -301,42 +346,48 @@ const ProjectDetails = ({ project }: Props) => {
   ];
 
   const funiture_data =[
+
     {
-      label: "Building Purpose",
-      value: project.project_attribute?.building_purpose,
+      label: "Name",
+      value: project.project_attribute?.name,
     },
     {
-      label: "Plot Address",
-      value: project.project_attribute?.plot_address,
-    },  {
-      label: "Plot Number",
-      value: project.project_attribute?.plot_number,
-    },  {
-      label: "Lot",
-      value: project.project_attribute?.lot,
+      label: "Unit Price",
+      value: project.project_attribute?.unit_price,
     },  {
       label: "Type",
       value: project.project_attribute?.type,
+    },  {
+      label: "Decription",
+      value: project.project_attribute?.decription,
+    },  {
+      label: "Quantity",
+      value: project.project_attribute?.quantity,
     },
   ];
 
   const concrete_data =[
+   
     {
-      label: "Building Purpose",
-      value: project.project_attribute?.building_purpose,
+      label: "Unit Of Measurement",
+      value: project.project_attribute?.unit_of_measurement,
+    }, 
+    {
+      label: "color",
+      value: project.project_attribute?.color,
     },
     {
-      label: "Plot Address",
-      value: project.project_attribute?.plot_address,
-    },  {
-      label: "Plot Number",
-      value: project.project_attribute?.plot_number,
-    },  {
-      label: "Lot",
-      value: project.project_attribute?.lot,
+      label: "Unit Price",
+      value: project.project_attribute?.unit_price,
     },  {
       label: "Type",
       value: project.project_attribute?.type,
+    },  {
+      label: "Decription",
+      value: project.project_attribute?.decription,
+    },  {
+      label: "Quantity",
+      value: project.project_attribute?.quantity,
     },
   ];
 const [step, setStep] = useState<staps>("");
@@ -371,7 +422,7 @@ const [step, setStep] = useState<staps>("");
         })}
       </ul>
     </section>
-    {/* building */}
+    {/* Building  Attributes */}
     {(project.project_type =="building" && project.project_attribute?.type) ? (
       <>
     <section className="mt-5 mb-5">
@@ -428,6 +479,103 @@ const [step, setStep] = useState<staps>("");
      ) 
     }
 
+   {/* Funiture Attributes */}
+   {(project.project_type =="funiture" && project.project_attribute?.type) ? (
+      <>
+    <section className="mt-5 mb-5">
+    <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold ">
+      Project Attributes
+    </h3>
+    <ul className="grid grid-cols-1 max-lg:roundedm bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
+      {funiture_data.map((item, index) => {
+        return (
+          <li
+            key={index}
+            className="max-lg:text-sm max-lg:space-y-2 lg:flex items-center"
+          >
+            <div className="w-52 text-black-500">{item.label}:</div>
+            <div
+              className={cn("font-semibold lg:w-[calc(100%-230px)]", {
+                "text-primary": index === 0,
+              })}
+            >
+              {item.isStatus ? (
+                <Status status={item.value as StatusType} />
+              ) : (
+                item.value
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+ 
+  </>
+     ):(<><div className="flex justify-bettween space-x-6 items-center mt-5">
+      <Button
+        onClick={() => setStep('furniture_details')}
+        className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
+      >
+        <div className="flex items-center space-x-3">
+          <Icons.PlusIcon className="fill-white size-3.5" />
+          <div> Create Attributes</div>
+        </div>
+      </Button>
+   
+  
+    </div></>
+     ) 
+    }
+   {/* concreate  Attributes */}
+   {(project.project_type =="concreate" && project.project_attribute?.type) ? (
+      <>
+    <section className="mt-5 mb-5">
+    <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold ">
+      Project Attributes
+    </h3>
+    <ul className="grid grid-cols-1 max-lg:roundedm bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
+      {concrete_data.map((item, index) => {
+        return (
+          <li
+            key={index}
+            className="max-lg:text-sm max-lg:space-y-2 lg:flex items-center"
+          >
+            <div className="w-52 text-black-500">{item.label}:</div>
+            <div
+              className={cn("font-semibold lg:w-[calc(100%-230px)]", {
+                "text-primary": index === 0,
+              })}
+            >
+              {item.isStatus ? (
+                <Status status={item.value as StatusType} />
+              ) : (
+                item.value
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+
+
+  </>
+     ):(<><div className="flex justify-bettween space-x-6 items-center mt-5">
+      <Button
+        onClick={() => setStep('concrete_details')}
+        className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
+      >
+        <div className="flex items-center space-x-3">
+          <Icons.PlusIcon className="fill-white size-3.5" />
+          <div> Create Attributes</div>
+        </div>
+      </Button>
+   
+  
+    </div></>
+     ) 
+    }
 
  {/* <Modal
       title={stepProps[step].title}
@@ -443,7 +591,7 @@ const [step, setStep] = useState<staps>("");
         }, 1000);
       }}
     > */}
-{/* {step === "furniture_details" && (
+{step === "furniture_details" && (
         <motion.div
           key={step.toString()}
           initial={{
@@ -457,35 +605,64 @@ const [step, setStep] = useState<staps>("");
           <section className="w-full">
             <FormProvider {...methods}>
               <form
-                onSubmit={methods.handleSubmit(onSubmit)}
+                onSubmit={methods.handleSubmit(onSubmitFunitureAttribute)}
                 className="max-lg:space-y-6 lg:grid lg:grid-cols-2 lg:gap-x-9 gap-y-6"
               >
                 <Input
-                  name="product.name"
+                  name="name"
                   label="Furniture Name"
                   rules={["required"]}
                   placeholder="Enter Name"
                 />
-                <_Select
+                <SelectInput
                   label="Furniture Type"
-                  name="product.type"
+                  name="type"
                   required
                   options={
-                    furniture_types?.data?.categories?.map((furniture_type) => {
+                    furniture_types?.data?.map((furniture_type) => {
                       return {
                         name: furniture_type?.name,
                         id: furniture_type?.id,
                       };
                     }) || []
                   }
-                  name_key="name"
-                  value_key="id"
-                  placeholder=" Select Furniture Type "
+                  optionComponent={(option, selectedOption) => (
+                    <div
+                      className={cn(
+                        "py-2 w-full border-b px-4 flex items-center space-x-5 text-tc-main hover:bg-[#FF69001A]",
+                        {
+                          "bg-[#FF69001A]": option?.value === selectedOption?.value,
+                        }
+                      )}
+                    >
+                      <div className="w-full text-sm flex items-center space-x-2">
+                        <div>{option?.name}</div>
+                      </div>
+                      {option?.name === selectedOption?.name && (
+                        <div>
+                          <Icons.SelectedIcon />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  trigger={(selected) => (
+                    <div className="flex h-min bg-transparent items-center space-x-1">
+                      {selected ? (
+                        <div className="text-tc-main flex space-x-2 items-center text-sm">
+                          <span>{selected.name}</span>
+                        </div>
+                      ) : (
+                        <div className="text-sm mt-[2px] text-black-500">
+                          Select Funiture Purpose
+                        </div>
+                      )}
+                    </div>
+                  )}
                 />
 
                 <div className="lg:col-span-2">
                   <Input
-                    name="product.description"
+                    name="description"
                     label="Description"
                     rules={["required"]}
                     placeholder="Enter Description"
@@ -494,18 +671,18 @@ const [step, setStep] = useState<staps>("");
                 </div>
 
                 <Input
-                  name="product._unit_price"
+                  name="unit_price"
                   label="Unit Price"
                   rules={["required"]}
                   placeholder="Enter Unit Price"
                   type="tel"
                   onChange={(e) => {
                     setValue(
-                      "product._unit_price",
+                      "unit_price",
                       numberWithCommas(e?.target.value.replace(/[^0-9.]/g, "")),
                     );
                     setValue(
-                      "product.unit_price",
+                      "unit_price",
                       Number(e.target.value.replaceAll(",", "")),
                     );
                   }}
@@ -513,26 +690,18 @@ const [step, setStep] = useState<staps>("");
 
                 <p>
                   Total Value :{" "}
-                  {numberWithCommas(
+                  {/* {numberWithCommas(
                     String(
-                      Number(product.unit_price) * product.quantity,
+                      Number(unit_price) * quantity,
                     ).replace(/[^0-9.]/g, ""),
-                  )}
+                  )} */}
                 </p>
 
                 <div className="lg:col-span-2 flex justify-center py-4 gap-2">
-                  <Button
-                    theme="outline"
-                    onClick={goBack}
-                    type="button"
-                    className="w-full lg:w-[240px]"
-                  >
-                    Back
-                  </Button>
+                  
                   <Button
                     loading={isLoading}
                     type="submit"
-                    disabled={!isValid}
                     className="w-full lg:w-[240px]"
                   >
                     Create
@@ -542,9 +711,9 @@ const [step, setStep] = useState<staps>("");
             </FormProvider>
           </section>
         </motion.div>
-      )} */}
+      )}
 
-      {/* {step === "concrete_details" && (
+      {step === "concrete_details" && (
         <motion.div
           key={step.toString()}
           initial={{
@@ -558,18 +727,18 @@ const [step, setStep] = useState<staps>("");
           <section className="w-full">
             <FormProvider {...methods}>
               <form
-                onSubmit={methods.handleSubmit(onSubmit)}
+                onSubmit={methods.handleSubmit(onSubmitConcreateAttribute)}
                 className="max-lg:space-y-6 lg:grid lg:grid-cols-2 lg:gap-x-9 gap-y-6"
               >
                 <Input
-                  name="product.name"
+                  name="name"
                   label="Concrete Name"
                   rules={["required"]}
                   placeholder="Enter Name"
                 />
-                <_Select
+                <SelectInput
                   label="Concrete Type"
-                  name="product.type"
+                  name="type"
                   required
                   options={
                     concrete_types?.data?.categories?.map((concrete_type) => {
@@ -579,30 +748,52 @@ const [step, setStep] = useState<staps>("");
                       };
                     }) || []
                   }
-                  name_key="name"
-                  value_key="id"
-                  placeholder=" Select Concrete Type "
+                  optionComponent={(option, selectedOption) => (
+                    <div
+                      className={cn(
+                        "py-2 w-full border-b px-4 flex items-center space-x-5 text-tc-main hover:bg-[#FF69001A]",
+                        {
+                          "bg-[#FF69001A]": option?.value === selectedOption?.value,
+                        }
+                      )}
+                    >
+                      <div className="w-full text-sm flex items-center space-x-2">
+                        <div>{option?.name}</div>
+                      </div>
+                      {option?.name === selectedOption?.name && (
+                        <div>
+                          <Icons.SelectedIcon />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  trigger={(selected) => (
+                    <div className="flex h-min bg-transparent items-center space-x-1">
+                      {selected ? (
+                        <div className="text-tc-main flex space-x-2 items-center text-sm">
+                          <span>{selected.name}</span>
+                        </div>
+                      ) : (
+                        <div className="text-sm mt-[2px] text-black-500">
+                          Select Concrete Type
+                        </div>
+                      )}
+                    </div>
+                  )}
                 />
                 <Input
-                  name="product.description"
+                  name="description"
                   label="Concrete Description"
                   rules={["required"]}
                   placeholder="Enter Description"
                   tag="textarea"
                 />
                 <div className="lg:col-span-2 flex justify-center py-4 gap-2">
-                  <Button
-                    theme="outline"
-                    onClick={goBack}
-                    type="button"
-                    className="w-full lg:w-[240px]"
-                  >
-                    Back
-                  </Button>
+                
                   <Button
                     loading={isLoading}
                     type="submit"
-                    disabled={!isValid}
+                    // disabled={!isValid}
                     className="w-full lg:w-[240px]"
                   >
                     Create
@@ -612,7 +803,7 @@ const [step, setStep] = useState<staps>("");
             </FormProvider>
           </section>
         </motion.div>
-      )} */}
+      )}
 
       {step === "building_details" && ( 
         <>
