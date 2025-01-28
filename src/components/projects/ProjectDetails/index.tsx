@@ -235,7 +235,7 @@ const ProjectDetails = ({ project }: Props) => {
     try {
       const _output = {
         id:project.id,
-        type: project.project_type ,
+        type: project.project_type,
         quantity: data.quantity,
         lot: data?.lot,
         building_purpose: data.building_purpose.value,
@@ -257,8 +257,8 @@ const ProjectDetails = ({ project }: Props) => {
     try {
       const _output = {
         id:project.id,
-        name:project.name,
-        type: project.project_type ,
+        name:data.name,
+        type: data.type ,
         quantity: data.quantity,
         description: data.description,
         unit_price: data.unit_price,
@@ -345,7 +345,7 @@ const ProjectDetails = ({ project }: Props) => {
     },
   ];
 
-  const funiture_data =[
+  const furniture_data =[
 
     {
       label: "Name",
@@ -358,8 +358,8 @@ const ProjectDetails = ({ project }: Props) => {
       label: "Type",
       value: project.project_attribute?.type,
     },  {
-      label: "Decription",
-      value: project.project_attribute?.decription,
+      label: "Description",
+      value: project.project_attribute?.description,
     },  {
       label: "Quantity",
       value: project.project_attribute?.quantity,
@@ -383,15 +383,15 @@ const ProjectDetails = ({ project }: Props) => {
       label: "Type",
       value: project.project_attribute?.type,
     },  {
-      label: "Decription",
-      value: project.project_attribute?.decription,
+      label: "Description",
+      value: project.project_attribute?.description,
     },  {
       label: "Quantity",
       value: project.project_attribute?.quantity,
     },
   ];
 const [step, setStep] = useState<staps>("");
-
+console.log('attribute',project.project_attribute);
   return (<>
 
     <section>
@@ -423,72 +423,72 @@ const [step, setStep] = useState<staps>("");
       </ul>
     </section>
     {/* Building  Attributes */}
-    {(project.project_type =="building" && project.project_attribute?.type) ? (
-      <>
-    <section className="mt-5 mb-5">
-    <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold ">
-      Project Attributes
-    </h3>
-    <ul className="grid grid-cols-1 max-lg:roundedm bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
-      {building_data.map((item, index) => {
-        return (
-          <li
-            key={index}
-            className="max-lg:text-sm max-lg:space-y-2 lg:flex items-center"
-          >
-            <div className="w-52 text-black-500">{item.label}:</div>
-            <div
-              className={cn("font-semibold lg:w-[calc(100%-230px)]", {
-                "text-primary": index === 0,
-              })}
+    {project.project_type === "building" && (
+  project.project_attribute?.type ? (
+    <>
+      <section className="mt-5 mb-5">
+        <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold">
+          Project Attributes
+        </h3>
+        <ul className="grid grid-cols-1 max-lg:rounded bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
+          {building_data.map((item, index) => (
+            <li
+              key={index}
+              className="max-lg:text-sm max-lg:space-y-2 lg:flex items-center"
             >
-              {item.isStatus ? (
-                <Status status={item.value as StatusType} />
-              ) : (
-                item.value
-              )}
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  </section>
-  <section className="mt-5 mb-5">
-  <div className="lg:col-span-2">
-                        <BuildingUnitsTable
-                        project={project}
-                          data={building_units}
-                          setData={setBuildingUnits}
-                        />
-                      </div>
-                      </section>
-  </>
-     ):(<><div className="flex justify-bettween space-x-6 items-center mt-5">
-      <Button
-        onClick={() => setStep('building_details')}
-        className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
-      >
-        <div className="flex items-center space-x-3">
-          <Icons.PlusIcon className="fill-white size-3.5" />
-          <div> Create Attributes</div>
+              <div className="w-52 text-black-500">{item.label}:</div>
+              <div
+                className={cn("font-semibold lg:w-[calc(100%-230px)]", {
+                  "text-primary": index === 0,
+                })}
+              >
+                {item.isStatus ? (
+                  <Status status={item.value as StatusType} />
+                ) : (
+                  item.value
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-5 mb-5">
+        <div className="lg:col-span-2">
+          <BuildingUnitsTable
+            project={project}
+            data={building_units}
+            setData={setBuildingUnits}
+          />
         </div>
-      </Button>
-   
-  
-    </div></>
-     ) 
-    }
+      </section>
+    </>
+  ) : (
+    building_data.length > 0 && (
+      <div className="flex justify-between space-x-6 items-center mt-5">
+        <Button
+          onClick={() => setStep("building_details")}
+          className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
+        >
+          <div className="flex items-center space-x-3">
+            <Icons.PlusIcon className="fill-white size-3.5" />
+            <span>Create Attributes</span>
+          </div>
+        </Button>
+      </div>
+    )
+  )
+)}
 
    {/* Funiture Attributes */}
-   {(project.project_type =="funiture" && project.project_attribute?.type) ? (
-      <>
+   {project.project_type === "furniture" && (
+  project.project_attribute?.type ? (
     <section className="mt-5 mb-5">
-    <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold ">
-      Project Attributes
-    </h3>
-    <ul className="grid grid-cols-1 max-lg:roundedm bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
-      {funiture_data.map((item, index) => {
-        return (
+      <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold">
+        Project Attributes
+      </h3>
+      <ul className="grid grid-cols-1 max-lg:rounded bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
+        {furniture_data.map((item, index) => (
           <li
             key={index}
             className="max-lg:text-sm max-lg:space-y-2 lg:flex items-center"
@@ -506,37 +506,35 @@ const [step, setStep] = useState<staps>("");
               )}
             </div>
           </li>
-        );
-      })}
-    </ul>
-  </section>
- 
-  </>
-     ):(<><div className="flex justify-bettween space-x-6 items-center mt-5">
-      <Button
-        onClick={() => setStep('furniture_details')}
-        className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
-      >
-        <div className="flex items-center space-x-3">
-          <Icons.PlusIcon className="fill-white size-3.5" />
-          <div> Create Attributes</div>
-        </div>
-      </Button>
-   
-  
-    </div></>
-     ) 
-    }
+        ))}
+      </ul>
+    </section>
+  ) : (
+    furniture_data.length > 0 && (
+      <div className="flex justify-between space-x-6 items-center mt-5">
+        <Button
+          onClick={() => setStep("furniture_details")}
+          className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
+        >
+          <div className="flex items-center space-x-3">
+            <Icons.PlusIcon className="fill-white size-3.5" />
+            <span>Create Attributes</span>
+          </div>
+        </Button>
+      </div>
+    )
+  )
+)}
+
    {/* concreate  Attributes */}
-   {(project.project_type =="concreate" && project.project_attribute?.type) ? (
-      <>
+   {project.project_type === "concrete" && (
+  project.project_attribute?.type ? (
     <section className="mt-5 mb-5">
-    <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold ">
-      Project Attributes
-    </h3>
-    <ul className="grid grid-cols-1 max-lg:roundedm bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
-      {concrete_data.map((item, index) => {
-        return (
+      <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold">
+        Project Attributes
+      </h3>
+      <ul className="grid grid-cols-1 max-lg:rounded bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
+        {concrete_data.map((item, index) => (
           <li
             key={index}
             className="max-lg:text-sm max-lg:space-y-2 lg:flex items-center"
@@ -554,28 +552,26 @@ const [step, setStep] = useState<staps>("");
               )}
             </div>
           </li>
-        );
-      })}
-    </ul>
-  </section>
+        ))}
+      </ul>
+    </section>
+  ) : (
+    concrete_data.length > 0 && (
+      <div className="flex justify-between space-x-6 items-center mt-5">
+        <Button
+          onClick={() => setStep("concrete_details")}
+          className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
+        >
+          <div className="flex items-center space-x-3">
+            <Icons.PlusIcon className="fill-white size-3.5" />
+            <span>Create Attributes</span>
+          </div>
+        </Button>
+      </div>
+    )
+  )
+)}
 
-
-  </>
-     ):(<><div className="flex justify-bettween space-x-6 items-center mt-5">
-      <Button
-        onClick={() => setStep('concrete_details')}
-        className="w-1/2 lg:w-[200px] max-lg:h-9 max-lg:!px-0"
-      >
-        <div className="flex items-center space-x-3">
-          <Icons.PlusIcon className="fill-white size-3.5" />
-          <div> Create Attributes</div>
-        </div>
-      </Button>
-   
-  
-    </div></>
-     ) 
-    }
 
  {/* <Modal
       title={stepProps[step].title}
@@ -687,7 +683,14 @@ const [step, setStep] = useState<staps>("");
                     );
                   }}
                 />
-
+                <Input
+                  name="quantity"
+                  label="Quantity"
+                  rules={["required"]}
+                  placeholder="Enter Quantity"
+                  type="number"
+                  
+                />
                 <p>
                   Total Value :{" "}
                   {/* {numberWithCommas(
