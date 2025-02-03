@@ -105,7 +105,11 @@ export const warehouse = createApi({
       invalidatesTags: ["Warehouse products"],
     }),
     fetchProducts: builder.query<FetchProductsResponse, FetchProjectsRequest>({
-      query: (credentials) => getRequest("/get-warehouse-items", credentials),
+      query: (credentials) => getRequest("/get-warehouse-items", { credentials, type: credentials.type || "material" }),
+      providesTags: ["Warehouse products"],
+    }),
+    fetchItemTypes: builder.query<FetchProductsResponse, FetchProjectsRequest>({
+      query: (credentials) => getRequest("/fetch-item-types", credentials),
       providesTags: ["Warehouse products"],
     }),
     /* fetchProjectsStats: builder.query<FetchProjectsStatsResponse, FetchProjectsRequest>({ */
@@ -224,6 +228,7 @@ export const warehouse = createApi({
 export const {
   useCreateWarehouseItemMutation,
   useFetchProductsQuery,
+  useFetchItemTypesQuery,
   useFetchProjectDetailQuery,
 
   //purchase order

@@ -4,11 +4,19 @@ import SwitchInput from "@/components/global/SwitchInput";
 import Table from "@/components/global/Table";
 import Icons from "@/components/icons";
 import { cn, formatAmount } from "@/lib/utils";
+import { useFetchProductsQuery } from "@/services/warehouse";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 
 const WarehouseAssets = () => {
   const router = useRouter();
+  // const { data: warehouse } = useFetchProductsQuery({
+  //   type: "material", 
+  // });
+
+  const { data: warehouse } = useFetchProductsQuery({
+    type: "asset", 
+  });
 
   const methods = useForm();
   const data = [
@@ -104,20 +112,20 @@ const WarehouseAssets = () => {
       key: "actions",
     },
   ];
-
+// console.log('warehouse',warehouse.data);
   return (
     <section>
       <Table
-        data={data!}
+        data={warehouse?.data}
         loaderLength={10}
         tableHeadData={tableHeadData}
         rowComponent={(transaction, index, length) => {
           const {
             id,
-            assetName,
-            assetCategory,
-            assetQuantity,
-            unitPrice,
+            name,
+            category_id,
+            quantity,
+            cost,
             totalValue,
           } = transaction;
           return (
@@ -131,16 +139,16 @@ const WarehouseAssets = () => {
             >
               <td className="p-4 text-black-500 whitespace-nowrap">{id}</td>
               <td className="p-4 text-black-500 whitespace-nowrap">
-                {assetName}
+                {name}
               </td>
               <td className="py-[18px] w-[100px] px-4 text-black-500 whitespace-nowrap">
-                {assetCategory}
+                {category_id.name}
               </td>
               <td className="p-4 text-black-500 whitespace-nowrap">
-                {assetQuantity}
+                {quantity}
               </td>
               <td className="p-4 text-black-500 whitespace-nowrap">
-                {formatAmount(+unitPrice, "NGN")}
+                {formatAmount(+cost, "NGN")}
               </td>
               <td className="p-4 text-black-500 whitespace-nowrap">
                 {formatAmount(+totalValue, "NGN")}

@@ -18,7 +18,7 @@ export type CreateItemResponse = {
 
 export type FetchProductsRequest = {
   perPage?: number;
-  /* type?: "ongoing" | "completed"; */
+  type?: "material" | "asset";
 };
 
 export interface Product {

@@ -26,13 +26,11 @@ const Stats = ({
       )}
       <div
         className={cn(
-          "grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8",
+          "grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8", // Default mobile layout with 2 columns, desktop will have 4 columns
           {
-            "lg:grid-cols-3": warehouseStats,
-          },
-          {
-            leaseStats: "lg:grid-cols-4",
-          },
+            "lg:grid-cols-3": warehouseStats, // 3 columns for warehouse stats on desktop
+            "lg:grid-cols-4": leaseStats, // 4 columns for lease stats on desktop
+          }
         )}
       >
         {stats.map((stat, index) => (

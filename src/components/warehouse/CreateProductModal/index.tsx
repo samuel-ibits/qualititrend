@@ -10,7 +10,7 @@ import Icons from "@/components/icons";
 import { WAREHOUSE_ITEM_STATUSES, WAREHOUSE_ITEM_TYPES } from "@/lib/constants";
 import { formatAmount } from "@/lib/utils";
 import { useFetchCategoriesQuery } from "@/services/categories";
-import { useCreateWarehouseItemMutation } from "@/services/warehouse";
+import { useCreateWarehouseItemMutation, useFetchItemTypesQuery } from "@/services/warehouse";
 import { useEffect, useState } from "react";
 
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -33,13 +33,11 @@ const CreateProductModal = ({
   const methods = useForm({
     defaultValues: {
       stockQuantity: null as unknown as number,
-
       itemType: null as unknown as number,
       unit_of_measurement: null as unknown as string,
       leaseAvailability: "",
       valuePerUnit: null as unknown as number,
       status: null as unknown as number,
-
       name: "",
       item_code: "",
       category_id: null,
@@ -55,6 +53,10 @@ const CreateProductModal = ({
 
   const { data: units_of_measurement } = useFetchCategoriesQuery({
     type: "unit_measurement",
+  });
+
+  const { data: item_types } = useFetchItemTypesQuery({
+    // type: "unit_measurement",
   });
 
   const watchStockQuantity = watch("stockQuantity");
@@ -82,13 +84,13 @@ const CreateProductModal = ({
       stockQuantity: quantity,
     } = watch();
     try {
-      console.log({ unit_of_measurement });
+      console.log({ item_type});
       await createWarehouseItem({
         //@ts-ignore
         name,
         item_code,
-        item_type: item_type.value,
-        unit_of_measurement: unit_of_measurement.id,
+        item_type: item_type,
+        unit_of_measurement: unit_of_measurement,
         cost: Number(cost),
         status: status.value,
         quantity: Number(quantity),
@@ -97,6 +99,7 @@ const CreateProductModal = ({
       })
         .unwrap()
         .then((res) => {
+          console.log("res", res);
           setStep("success");
         })
         .catch((error) => {
@@ -167,7 +170,7 @@ const CreateProductModal = ({
                 placeholder="Stock Quantity"
               />
 
-              <_Select
+              {/* <_Select
                 label="Item Type"
                 name="itemType"
                 required
@@ -175,7 +178,7 @@ const CreateProductModal = ({
                 name_key="name"
                 value_key="value"
                 placeholder="Select item type "
-              />
+              /> */}
 
               <_Select
                 label="Status"
@@ -183,16 +186,16 @@ const CreateProductModal = ({
                 required
                 options={WAREHOUSE_ITEM_STATUSES}
                 name_key="name"
-                value_key="value"
+                value_key="id"
                 placeholder="Select Status "
               />
 
               <_Select
-                label="Unit"
-                name="unit_of_measurement"
+                label="Item Types"
+                name="itemType"
                 required
                 options={
-                  units_of_measurement?.data?.categories?.map((status) => {
+                  item_types?.data?.map((status) => {
                     return {
                       name: status?.name,
                       id: status?.id,
@@ -200,7 +203,23 @@ const CreateProductModal = ({
                   }) || []
                 }
                 name_key="name"
-                value_key="value"
+                value_key="id"
+                placeholder=" Select Item Types"
+              />
+              <_Select
+                label="Unit"
+                name="unit_of_measurement"
+                required
+                options={
+                  units_of_measurement?.data?.map((status) => {
+                    return {
+                      name: status?.name,
+                      id: status?.id,
+                    };
+                  }) || []
+                }
+                name_key="name"
+                value_key="id"
                 placeholder=" Select Unit of Measurement"
               />
 

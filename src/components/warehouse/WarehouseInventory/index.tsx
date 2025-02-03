@@ -9,6 +9,7 @@ import { cn, formatAmount } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { Product } from "@/types/services/warehouse";
+import {useFetchProductsQuery} from "@/services/warehouse/index";
 
 type Props = {
   data: Product[];
@@ -18,8 +19,46 @@ const WarehouseInventory = ({ data }: Props) => {
   const methods = useForm();
   const router = useRouter();
 
-  console.log({ data });
+  
 
+  const { data: warehouse } = useFetchProductsQuery({
+    type: "material", 
+  });
+  console.log("warehouse", warehouse?.data);
+  //  const tableHeadData = [
+  //   {
+  //     title: "ID",
+  //     key: "id",
+  //   },
+  //   {
+  //     title: "Asset Name",
+  //     key: "assetName",
+  //   },
+  //   {
+  //     title: "Asset Category",
+  //     key: "assetCategory",
+  //   },
+  //   {
+  //     title: "Asset Quantity",
+  //     key: "assetQuantity",
+  //   },
+  //   {
+  //     title: "Unit Price",
+  //     key: "unitPrice",
+  //   },
+  //   {
+  //     title: "Total Value",
+  //     key: "totalValue",
+  //   },
+  //   {
+  //     title: "Status",
+  //     key: "status",
+  //   },
+  //   {
+  //     title: "Actions",
+  //     key: "actions",
+  //   },
+  // ];
   const tableHeadData: {
     title: string;
     key: keyof Product | "actions" | "total_value" | "quantity";
@@ -57,24 +96,24 @@ const WarehouseInventory = ({ data }: Props) => {
       key: "actions",
     },
   ];
-
+console.log("material",warehouse?.data);
   return (
     <section>
       <Table
-        data={data!}
+        data={warehouse?.data}
         loaderLength={10}
         tableHeadData={tableHeadData}
         rowComponent={(transaction, index, length) => {
           const {
             id,
             name,
-            category_id: category,
+            category_id,
+            quantity,
             cost,
-            item_status,
+            totalValue,
           } = transaction;
-
-          let quantity = 0;
-          let total_value = Number(cost) * quantity;
+         
+          // let total_value = Number(cost) * quantity;
 
           return (
             <tr
@@ -85,28 +124,26 @@ const WarehouseInventory = ({ data }: Props) => {
                 "border-b": index !== length - 1,
               })}
             >
-              <td className="p-4 text-black-500 whitespace-nowrap">{id}</td>
-              <td className="p-4 text-black-500 whitespace-nowrap">{name}</td>
+               <td className="p-4 text-black-500 whitespace-nowrap">{id}</td>
+              <td className="p-4 text-black-500 whitespace-nowrap">
+                {name}
+              </td>
               <td className="py-[18px] w-[100px] px-4 text-black-500 whitespace-nowrap">
-                {category}
+                {category_id.name}
               </td>
               <td className="p-4 text-black-500 whitespace-nowrap">
-                {quantity || "0"}
+                {quantity}
               </td>
               <td className="p-4 text-black-500 whitespace-nowrap">
                 {formatAmount(+cost, "NGN")}
               </td>
               <td className="p-4 text-black-500 whitespace-nowrap">
-                {formatAmount(+total_value, "NGN") || "0"}
+                {formatAmount(+totalValue, "NGN")}
               </td>
-              <td className="p-4">
+              <td className="p-4 flex items-center justify-center">
                 <FormProvider {...methods}>
                   <form>
-                    {/* @ts-ignore */}
-                    <SwitchInput
-                      name="Name"
-                      checked={item_status === "enabled"}
-                    />
+                    <SwitchInput name="Name" />
                   </form>
                 </FormProvider>
               </td>
