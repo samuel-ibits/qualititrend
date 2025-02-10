@@ -146,7 +146,7 @@ export default function BuildingUnitsTable({project, data = [], setData }: Table
   return (
     <section>
       <Table
-        title="Unit types"
+        title="Unit Types"
         data={fetchBuildingUnits?.data!}
         loaderLength={10}
         tableHeadData={tableHeadData}

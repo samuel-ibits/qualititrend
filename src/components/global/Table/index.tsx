@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Skeleton from "react-loading-skeleton";
 import Pagination from "../Pagination";
 import Icons from "@/components/icons";
+import { FaEdit } from "react-icons/fa";
 
 type TableProps<T> = {
   data: T[];
@@ -53,16 +54,27 @@ const Table = <T,>({
 }: TableProps<T>) => {
   return (
     <>
+      <div className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold flex justify-between items-center">
+          <h3>{title} </h3>
+          <button className="flex items-center space-x-2 text-orange-500 hover:text-white py-2 px-4 rounded-lg hover:bg-orange-600"
+        onClick={(e) => {
+          // e.stopPropagation(); 
+          // openAddUnitTypeModal();
+        }}>
+          <FaEdit className="w-4 h-4" />
+            <span className="font-small lg:text-sm">Update</span>
+          </button>
+        </div>
+    
       {!useShadow && (
+        
         <div
           className={cn(
             "h-fit flex flex-col xl:flex-row xl:items-center justify-between",
             { "mb-4": title },
           )}
         >
-          <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold ">
-          {title}
-    </h3>
+               
           {/* <h3 className="text-base lg:text-xl font-bold">}</h3> */}
           <div className="hidden xl:block">
             {tableHeaderLeftComponent && tableHeaderLeftComponent()}
@@ -116,12 +128,13 @@ const Table = <T,>({
                         "py-2": useShadow,
                       })}
                     >
-                      <div
-                        className={cn(
-                          "scrollbar scrollbar-w-1 scrollbar-thumb-primary scrollbar-track-pc-02 scrollbar-track-rounded-md scrollbar-thumb-rounded-md overflow-y-auto relative",
-                          height,
-                        )}
-                      >
+                     <div
+  className={cn(
+    "scrollbar scrollbar-w-1 scrollbar-thumb-primary scrollbar-track-pc-02 scrollbar-track-rounded-md scrollbar-thumb-rounded-md overflow-y-auto xl:overflow-visible relative",
+    height
+  )}
+>
+
                         <table className="min-w-full text-left text-sm font-light">
                           <thead className="capitalize sticky top-0">
                             <tr>
@@ -140,7 +153,7 @@ const Table = <T,>({
                           <tbody className="font-normal">
                             {data?.map((row, index) => {
                               return (
-                                <Fragment key={index}>
+                                <Fragment key={index} >
                                   {rowComponent(row, index, data.length)}
                                 </Fragment>
                               );

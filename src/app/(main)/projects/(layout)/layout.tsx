@@ -130,6 +130,8 @@ const ProjectsLayout = ({ children }: ProjectsLayoutProps) => {
       <CreateProjectModal
         showModal={showCreateProjectModal}
         setShowModal={setShowCreateProjectModal}
+        currentData={null}
+
       />
       <ProjectFilterModal
         showModal={showProjectFilterModal}

@@ -21,6 +21,7 @@ import { useFetchProjectStatussQuery } from "@/services/projectStatus";
 type CreateProjectModalProps = {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
+  currentData
 };
 
 type steps =
@@ -33,6 +34,7 @@ type steps =
 const CreateProjectModal = ({
   showModal,
   setShowModal,
+  currentData
 }: CreateProjectModalProps) => {
   const [step, setStep] = useState<steps>("create");
 
@@ -61,7 +63,8 @@ const CreateProjectModal = ({
     initiation_date: Yup.string().required("Please fill this"),
     completion_date: Yup.string().required("Please fill this"),
   });
-
+  
+console.log('curent value',currentData)
   // Hook form setup
   const formOptions = { resolver: yupResolver(validationSchema) };
   const methods = useForm({

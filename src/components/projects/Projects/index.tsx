@@ -85,22 +85,22 @@ const Projects = () => {
       label: "Create New Project",
       onClick: () => setShowCreateProjectModal(true),
     },
-    {
-      label: "Create Building Purpose",
-      onClick: () => {},
-    },
-    {
-      label: "Create Furniture Type",
-      onClick: () => {},
-    },
-    {
-      label: "Create Concrete Type",
-      onClick: () => {},
-    },
-    {
-      label: "Create Building Unit Type",
-      onClick: () => {},
-    },
+    // {
+    //   label: "Create Building Purpose",
+    //   onClick: () => {},
+    // },
+    // {
+    //   label: "Create Furniture Type",
+    //   onClick: () => {},
+    // },
+    // {
+    //   label: "Create Concrete Type",
+    //   onClick: () => {},
+    // },
+    // {
+    //   label: "Create Building Unit Type",
+    //   onClick: () => {},
+    // },
   ];
 
   const { data: recent_projects, isSuccess } = useFetchProjectsQuery({});
@@ -292,6 +292,8 @@ const Projects = () => {
       <CreateProjectModal
         showModal={showCreateProjectModal}
         setShowModal={setShowCreateProjectModal}
+        currentData={null}
+
       />
     </div>
   );

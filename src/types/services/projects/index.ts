@@ -131,6 +131,10 @@ export type FetchProjectsRequest = {
   perPage?: number;
   type?: "ongoing" | "completed";
 };
+export type FetchUnittypeRequest = {
+  perPage?: number;
+  type?: "asset" | "material";
+};
 
 export interface FetchProjectsResponse {
   success: boolean;

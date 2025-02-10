@@ -119,6 +119,8 @@ const Header = () => {
       <CreateProjectModal
         showModal={showCreateProjectModal}
         setShowModal={setShowCreateProjectModal}
+        currentData={null}
+
       />
     </>
   );

@@ -1,4 +1,4 @@
-import { FetchProjectsRequest } from "@/types/services/projects";
+import { FetchProjectsRequest, FetchUnittypeRequest } from "@/types/services/projects";
 import {
   CreateItemRequest,
   CreateItemResponse,
@@ -104,7 +104,7 @@ export const warehouse = createApi({
         postRequest("/create-warehouse-item", credentials),
       invalidatesTags: ["Warehouse products"],
     }),
-    fetchProducts: builder.query<FetchProductsResponse, FetchProjectsRequest>({
+    fetchProducts: builder.query<FetchProductsResponse, FetchUnittypeRequest>({
       query: (credentials) => getRequest("/get-warehouse-items", { credentials, type: credentials.type || "material" }),
       providesTags: ["Warehouse products"],
     }),

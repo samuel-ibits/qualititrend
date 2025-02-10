@@ -19,6 +19,8 @@ import {useUpdateProjectAttributesMutation} from "@/services/projects";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BuildingUnitsTable from "../CreateProjectModal/BuildingUnitsTable";
+import { FaEdit } from "react-icons/fa";
+import CreateProjectModal from "../CreateProjectModal";
 
 
  const validationSchema = Yup.object().shape({
@@ -163,6 +165,7 @@ const stepProps = {
 const ProjectDetails = ({ project }: Props) => {
   const [updateBuildingAtribute, { isLoading }] = useUpdateProjectAttributesMutation();
   const [submit_error, setSubmitError] = useState("");
+  const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
 
    const [building_units, setBuildingUnits] = useState<AddBuildingUnitType[]>(
       [],
@@ -395,9 +398,14 @@ console.log('attribute',project.project_attribute);
   return (<>
 
     <section>
-      <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold">
-        Project Details
-      </h3>
+    <div className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold flex justify-between items-center">
+      <h3>Project Details</h3>
+      <button className="flex items-center space-x-2 text-orange-500 hover:text-white py-2 px-4 rounded-lg hover:bg-orange-600" 
+      onClick={() => setShowCreateProjectModal(true)} >
+      <FaEdit className="w-4 h-4" />
+        <span className="font-small lg:text-sm">Update</span>
+      </button>
+    </div>
       <ul className="grid grid-cols-1 max-lg:roundedm bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
         {data.map((item, index) => {
           return (
@@ -421,15 +429,25 @@ console.log('attribute',project.project_attribute);
           );
         })}
       </ul>
+      <CreateProjectModal
+        showModal={showCreateProjectModal}
+        setShowModal={setShowCreateProjectModal}
+        currentData={data}
+      />
     </section>
     {/* Building  Attributes */}
     {project.project_type === "building" && (
   project.project_attribute?.type ? (
     <>
       <section className="mt-5 mb-5">
-        <h3 className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold">
-          Project Attributes
-        </h3>
+      <div className="bg-[#FFF0E5] max-lg:mb-4 p-2.5 lg:py-4 lg:px-5 lg:text-xl font-semibold flex justify-between items-center">
+      <h3>Project Attributes  </h3>
+      <button className="flex items-center space-x-2 text-orange-500 hover:text-white py-2 px-4 rounded-lg hover:bg-orange-600"
+      onClick={() => setStep("building_details")}>
+      <FaEdit className="w-4 h-4" />
+        <span className="font-small lg:text-sm">Update</span>
+      </button>
+    </div>
         <ul className="grid grid-cols-1 max-lg:rounded bg-white max-lg:drop-shadow-md lg:grid-cols-2 max-lg:py-4 lg:mt-10 gap-y-5 lg:gap-6 px-5">
           {building_data.map((item, index) => (
             <li
